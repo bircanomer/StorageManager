@@ -1,0 +1,37 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Sparkle top-left -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,28 L36,32 L40,34 L36,36 L34,40 L32,36 L28,34 L32,32 Z" />
+
+    <!-- Sparkle top-right -->
+    <path
+        android:fillColor="#AAFFFFFF"
+        android:pathData="M70,24 L71.5,27 L74.5,28.5 L71.5,30 L70,33 L68.5,30 L65.5,28.5 L68.5,27 Z" />
+
+    <!-- Broom handle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M52,38 L56,38 L56,62 L52,62 Z" />
+
+    <!-- Broom head -->
+    <path
+        android:fillColor="#E0DEFF"
+        android:pathData="M44,62 L64,62 L64,66 Q64,68 62,68 L60,76 Q58,80 54,80 Q50,80 48,76 L46,68 Q44,68 44,66 Z" />
+
+    <!-- Bristle lines -->
+    <path
+        android:strokeColor="#BDBDFF"
+        android:strokeWidth="1"
+        android:pathData="M50,68 L49,78 M54,68 L54,80 M58,68 L59,78" />
+
+    <!-- Small sparkle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M72,48 L73,50 L75,51 L73,52 L72,54 L71,52 L69,51 L71,50 Z" />
+</vector>

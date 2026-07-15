@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StorageManager</string>
+    <string name="dashboard_title">Depolama Yöneticisi</string>
+    <string name="scan_button">Akıllı Tarama Başlat</string>
+    <string name="scanning">Taranıyor…</string>
+    <string name="photos_category">Fotoğraflar</string>
+    <string name="apps_category">Uygulamalar</string>
+    <string name="cache_category">Önbellek</string>
+    <string name="files_category">Büyük Dosyalar</string>
+    <string name="settings_title">Ayarlar</string>
+    <string name="total_space">Toplam Alan</string>
+    <string name="used_space">Kullanılan</string>
+    <string name="free_space">Boş Alan</string>
+    <string name="cleanable_space">Temizlenebilir</string>
+    <string name="delete_selected">Seçilenleri Sil</string>
+    <string name="select_all">Tümünü Seç</string>
+    <string name="confirm_delete_title">Silme Onayı</string>
+    <string name="confirm_delete_message">Seçili %1$d öğeyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.</string>
+    <string name="delete_success">%1$d öğe başarıyla silindi</string>
+    <string name="blurry_photos">Bulanık Fotoğraflar</string>
+    <string name="duplicate_photos">Duplike Fotoğraflar</string>
+    <string name="screenshots">Ekran Görüntüleri</string>
+    <string name="old_photos">Eski Fotoğraflar</string>
+    <string name="unused_apps">Kullanılmayan Uygulamalar</string>
+    <string name="large_files">Büyük Dosyalar</string>
+    <string name="last_used">Son kullanım: %1$s</string>
+    <string name="days_ago">%1$d gün önce</string>
+    <string name="never_used">Hiç kullanılmadı</string>
+    <string name="uninstall">Kaldır</string>
+    <string name="cancel">İptal</string>
+    <string name="ok">Tamam</string>
+    <string name="permission_required">İzin Gerekli</string>
+    <string name="storage_permission_rationale">Dosyalarınızı taramak için depolama izni gereklidir.</string>
+    <string name="grant_permission">İzin Ver</string>
+    <string name="onboarding_title">Telefonunu Temizle</string>
+    <string name="onboarding_subtitle">AI destekli akıllı analiz ile gereksiz dosyaları bul ve temizle</string>
+    <string name="get_started">Başlayalım</string>
+</resources>
