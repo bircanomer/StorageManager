@@ -1,0 +1,4 @@
+Gestor d\'emmagatzematge intel·ligent
+Troba fotos borroses i duplicades
+Fitxers i vídeos de més de 50 MB
+Mapa d\'emmagatzematge

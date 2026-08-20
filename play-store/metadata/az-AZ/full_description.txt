@@ -1,0 +1,12 @@
+Süni intellekt dəstəkli analizlə lazımsız faylları tapın və silin
+
+✓ Bulanıq və təkrar şəkilləri tapın
+✓ Böyük fayllar — 50 MB-dan çox
+✓ Tətbiqlər — İstifadə olunmayan
+✓ Tətbiq keşi — Təhlükəsiz təmizlə
+✓ Təkrar sənədlər və endirmələr
+✓ Boş qovluqlar, jurnal və müvəqqəti fayllar
+✓ Yaddaş xəritəsi
+✓ Zibil qutusu
+
+Şəkillərinizi və fayllarınızı oxumaq üçün icazə istəniləcək. Heç bir məlumat cihazınızdan çıxmır.

@@ -1,0 +1,12 @@
+Găsește și elimină fișierele inutile cu analiză bazată pe IA
+
+✓ Găsește pozele neclare și duplicate
+✓ Fișiere mari — Peste 50 MB
+✓ Aplicații — Nefolosite
+✓ Cache aplicații — Golire sigură
+✓ Documente și descărcări duplicate
+✓ Foldere goale, fișiere jurnal și temporare
+✓ Harta stocării
+✓ Coș de gunoi
+
+Ți se va cere permisiunea de a citi pozele și fișierele tale. Niciun fel de date nu părăsesc dispozitivul.

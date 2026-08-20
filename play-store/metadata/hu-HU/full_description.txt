@@ -1,0 +1,12 @@
+Keresse meg és távolítsa el a felesleges fájlokat MI-alapú elemzéssel
+
+✓ Találja meg a homályos és duplikált fotókat
+✓ Nagy fájlok — 50 MB felett
+✓ Alkalmazások — Nem használt
+✓ Alkalmazás-gyorsítótár — Biztonságos ürítés
+✓ Duplikált dokumentumok és letöltések
+✓ Üres mappák, napló- és ideiglenes fájlok
+✓ Tárhelytérkép
+✓ Kuka
+
+Engedélyt fogunk kérni a fotói és fájljai olvasásához. Semmilyen adat nem hagyja el a készülékét.

@@ -1,0 +1,12 @@
+Raskite ir pašalinkite nereikalingus failus naudodami DI analizę
+
+✓ Raskite neryškias ir pasikartojančias nuotraukas
+✓ Dideli failai — Virš 50 MB
+✓ Programos — Nenaudojamos
+✓ Programų talpykla — Saugus valymas
+✓ Pasikartojantys dokumentai ir atsisiuntimai
+✓ Tušti aplankai, žurnalo ir laikinieji failai
+✓ Saugyklos žemėlapis
+✓ Šiukšlinė
+
+Jūsų bus paprašyta leidimo skaityti nuotraukas ir failus. Jokie duomenys nepalieka jūsų įrenginio.

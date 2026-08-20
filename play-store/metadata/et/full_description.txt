@@ -1,0 +1,12 @@
+Leia ja eemalda tarbetud failid tehisintellektil põhineva analüüsiga
+
+✓ Leia hägused ja korduvad fotod
+✓ Suured failid — Üle 50 MB
+✓ Rakendused — Kasutamata
+✓ Rakenduste vahemälu — Tühjenda turvaliselt
+✓ Korduvad dokumendid ja allalaadimised
+✓ Tühjad kaustad, logi- ja ajutised failid
+✓ Salvestusruumi kaart
+✓ Prügikast
+
+Küsime luba teie fotode ja failide lugemiseks. Ükski andmekild ei lahku teie seadmest.

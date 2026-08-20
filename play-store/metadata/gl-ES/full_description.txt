@@ -1,0 +1,12 @@
+Atopa e elimina ficheiros innecesarios cunha análise baseada en IA
+
+✓ Atopa fotos borrosas e duplicadas
+✓ Ficheiros grandes — Máis de 50 MB
+✓ Aplicacións — Sen usar
+✓ Caché das aplicacións — Baleirar con seguridade
+✓ Documentos e descargas duplicados
+✓ Cartafoles baleiros, ficheiros de rexistro e temporais
+✓ Mapa de almacenamento
+✓ Lixo
+
+Pediráseche permiso para ler as túas fotos e ficheiros. Ningún dato sae do teu dispositivo.

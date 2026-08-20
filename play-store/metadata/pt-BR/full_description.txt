@@ -1,0 +1,12 @@
+Encontre e remova arquivos inúteis com análise baseada em IA
+
+✓ Encontre fotos tremidas e duplicadas
+✓ Arquivos grandes — Acima de 50 MB
+✓ Apps — Sem uso
+✓ Cache dos apps — Limpe com segurança
+✓ Documentos duplicados e downloads
+✓ Pastas vazias, logs e arquivos temporários
+✓ Mapa do armazenamento
+✓ Lixeira
+
+Vamos pedir permissão para ler suas fotos e arquivos. Nenhum dado sai do seu aparelho.

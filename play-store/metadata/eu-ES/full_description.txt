@@ -1,0 +1,12 @@
+Aurkitu eta kendu behar ez diren fitxategiak AAn oinarritutako analisiarekin
+
+✓ Aurkitu argazki lausoak eta bikoiztuak
+✓ Fitxategi handiak — 50 MB baino gehiago
+✓ Aplikazioak — Erabili gabeak
+✓ Aplikazioen cachea — Garbitu seguru
+✓ Dokumentu eta deskarga bikoiztuak
+✓ Karpeta hutsak, erregistro- eta aldi baterako fitxategiak
+✓ Biltegiratze-mapa
+✓ Zaborrontzia
+
+Zure argazkiak eta fitxategiak irakurtzeko baimena eskatuko zaizu. Daturik ez da zure gailutik ateratzen.

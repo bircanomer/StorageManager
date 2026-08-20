@@ -1,0 +1,12 @@
+Yapay zekâ destekli analizle gereksiz dosyaları bul ve temizle
+
+✓ Bulanık ve kopya fotoğrafları bul
+✓ Büyük dosyalar — 50 MB üzeri
+✓ Uygulamalar — Kullanılmayan
+✓ Uygulama önbellekleri — Güvenle temizle
+✓ Kopya belgeler ve indirilenler
+✓ Boş klasörler, log ve geçici dosyalar
+✓ Depolama haritası
+✓ Çöp kutusu
+
+Fotoğraf ve dosyalarını okumak için izin istenecek. Hiçbir veri cihazından çıkmaz.

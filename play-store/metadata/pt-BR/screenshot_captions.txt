@@ -1,0 +1,4 @@
+Gerenciador de armazenamento inteligente
+Encontre fotos tremidas e duplicadas
+Arquivos e vídeos acima de 50 MB
+Mapa do armazenamento

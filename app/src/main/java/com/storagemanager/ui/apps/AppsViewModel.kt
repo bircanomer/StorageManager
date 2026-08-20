@@ -15,12 +15,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.storagemanager.ui.components.localeCollator
+
+enum class AppSortBy {
+    UNUSED_FIRST,
+    SIZE_DESC,
+    SIZE_ASC,
+    NAME_ASC
+}
 
 data class AppsUiState(
     val unusedApps: List<UnusedApp> = emptyList(),
     val selectedPackages: Set<String> = emptySet(),
     val isLoading: Boolean = true,
-    val dayFilter: Int = 30
+    val dayFilter: Int = 30,
+    val sortBy: AppSortBy = AppSortBy.UNUSED_FIRST
 )
 
 @HiltViewModel
@@ -32,8 +41,30 @@ class AppsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AppsUiState())
     val uiState: StateFlow<AppsUiState> = _uiState.asStateFlow()
 
+
     init {
-        loadApps()
+        loadCachedApps()
+    }
+
+    private fun loadCachedApps() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            try {
+                val cachedResult = repository.getCachedScanResults()
+                if (cachedResult != null && cachedResult.unusedApps.isNotEmpty()) {
+                    _uiState.update { state ->
+                        state.copy(
+                            unusedApps = sortApps(cachedResult.unusedApps, state.sortBy),
+                            isLoading = false
+                        )
+                    }
+                } else {
+                    loadApps()
+                }
+            } catch (e: Exception) {
+                loadApps()
+            }
+        }
     }
 
     fun loadApps() {
@@ -43,14 +74,38 @@ class AppsViewModel @Inject constructor(
                 val apps = repository.scanUnusedApps(_uiState.value.dayFilter)
                 _uiState.update {
                     it.copy(
-                        unusedApps = apps,
+                        unusedApps = sortApps(apps, it.sortBy),
                         isLoading = false,
                         selectedPackages = emptySet()
                     )
                 }
             } catch (e: Exception) {
+                android.util.Log.w("AppsVM", "Failed to load apps", e)
                 _uiState.update { it.copy(isLoading = false) }
             }
+        }
+    }
+
+    fun setSortBy(sortBy: AppSortBy) {
+        _uiState.update { state ->
+            state.copy(
+                sortBy = sortBy,
+                unusedApps = sortApps(state.unusedApps, sortBy)
+            )
+        }
+    }
+
+    private fun sortApps(apps: List<UnusedApp>, sortBy: AppSortBy): List<UnusedApp> {
+        return when (sortBy) {
+            AppSortBy.UNUSED_FIRST -> apps.sortedWith(
+                compareBy<UnusedApp> { 
+                    // lastUsed = 0 olanları (hiç kullanılmayanlar) en üste almak için sıralama önceliği
+                    if (it.lastUsed <= 0L || it.lastUsed < 86400000L) 0 else 1 
+                }.thenBy { it.lastUsed } // Diğerlerini de son kullanım tarihine göre eskiden yeniye (hiç kullanılmayanlara yakın) sırala
+            )
+            AppSortBy.SIZE_DESC -> apps.sortedByDescending { it.appSize + it.cacheSize }
+            AppSortBy.SIZE_ASC -> apps.sortedBy { it.appSize + it.cacheSize }
+            AppSortBy.NAME_ASC -> apps.sortedWith(compareBy(localeCollator()) { it.appName })
         }
     }
 
@@ -65,34 +120,81 @@ class AppsViewModel @Inject constructor(
         }
     }
 
-    fun selectAll() {
-        _uiState.update { state ->
-            state.copy(selectedPackages = state.unusedApps.map { it.packageName }.toSet())
-        }
-    }
 
-    fun clearSelection() {
-        _uiState.update { it.copy(selectedPackages = emptySet()) }
-    }
 
     fun setDayFilter(days: Int) {
         _uiState.update { it.copy(dayFilter = days) }
         loadApps()
     }
 
-    /**
-     * Belirtilen paketi kaldırmak için uninstall intent oluşturur.
-     * Döndürülen Intent'i Activity'den başlatmanız gerekir.
-     */
-    fun createUninstallIntent(packageName: String): Intent {
-        return Intent(Intent.ACTION_DELETE).apply {
-            data = Uri.parse("package:$packageName")
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    private val uninstallQueue = mutableListOf<String>()
+    private var lastAttemptedUninstallPackage: String? = null
+
+    fun startUninstallQueue(packages: List<String>) {
+        uninstallQueue.clear()
+        uninstallQueue.addAll(packages)
+        processNextUninstall()
+    }
+
+    fun processNextUninstall() {
+        lastAttemptedUninstallPackage?.let { pkg ->
+            checkAndRemoveIfUninstalled(pkg)
+            lastAttemptedUninstallPackage = null
+        }
+
+        if (uninstallQueue.isEmpty()) {
+            loadApps()
+            return
+        }
+
+        val nextPackage = uninstallQueue.removeAt(0)
+        lastAttemptedUninstallPackage = nextPackage
+        uninstallApp(nextPackage)
+    }
+
+    fun checkAndRemoveIfUninstalled(packageName: String) {
+        val isInstalled = try {
+            context.packageManager.getPackageInfo(packageName, 0)
+            true
+        } catch (_: Exception) {
+            false
+        }
+
+        if (!isInstalled) {
+            _uiState.update { state ->
+                state.copy(
+                    unusedApps = state.unusedApps.filterNot { it.packageName == packageName },
+                    selectedPackages = state.selectedPackages - packageName
+                )
+            }
         }
     }
 
+    fun refreshAfterUninstall() {
+        lastAttemptedUninstallPackage?.let { pkg ->
+            checkAndRemoveIfUninstalled(pkg)
+            lastAttemptedUninstallPackage = null
+        }
+    }
+
+    @Suppress("DEPRECATION")
     fun uninstallApp(packageName: String) {
-        val intent = createUninstallIntent(packageName)
-        context.startActivity(intent)
+        try {
+            val intent = Intent(Intent.ACTION_DELETE).apply {
+                data = Uri.parse("package:$packageName")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            try {
+                val fallbackIntent = Intent(Intent.ACTION_UNINSTALL_PACKAGE).apply {
+                    data = Uri.fromParts("package", packageName, null)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(fallbackIntent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

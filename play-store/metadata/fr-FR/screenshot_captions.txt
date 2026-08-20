@@ -1,0 +1,4 @@
+Gestionnaire de stockage intelligent
+Repérez les photos floues et en double
+Fichiers et vidéos de plus de 50 Mo
+Carte du stockage

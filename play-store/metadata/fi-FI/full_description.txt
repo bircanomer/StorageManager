@@ -1,0 +1,12 @@
+Löydä ja poista turhat tiedostot tekoälyanalyysin avulla
+
+✓ Löydä sumeat ja kaksoiskappalekuvat
+✓ Suuret tiedostot — Yli 50 MB
+✓ Sovellukset — Käyttämättömät
+✓ Sovellusten välimuistit — Tyhjennä turvallisesti
+✓ Kaksoiskappaleasiakirjat ja lataukset
+✓ Tyhjät kansiot, loki- ja väliaikaistiedostot
+✓ Tallennustilan kartta
+✓ Roskakori
+
+Sinulta pyydetään lupa lukea kuvasi ja tiedostosi. Mikään tieto ei poistu laitteeltasi.

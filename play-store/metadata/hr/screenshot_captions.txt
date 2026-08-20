@@ -1,0 +1,4 @@
+Pametni upravitelj pohrane
+Pronađite mutne i duplicirane fotografije
+Datoteke i videozapisi iznad 50 MB
+Karta pohrane

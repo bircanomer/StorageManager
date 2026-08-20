@@ -1,105 +1,98 @@
 package com.storagemanager.ml
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Bulanıklık tespit modülü.
+ * Laplacian varyansı hesabı — kenar/detay miktarının ölçüsü.
  *
- * Laplacian varyans yöntemiyle bir bitmap'in bulanık olup olmadığını belirler.
- * Düşük varyans değeri = daha bulanık görüntü anlamına gelir.
+ * Bulanıklık **kararı burada verilmez**. Laplacian varyansı çözünürlüğe duyarlıdır ve
+ * küçültülmüş bir thumbnail üzerinde hesaplandığında odağı değil sahnedeki doku
+ * miktarını ölçer; gerçek karar [SharpnessProbe] tarafından fotoğrafın kendi
+ * çözünürlüğünden alınan bölgelerle verilir.
+ *
+ * Buradaki [roughSharpness] yalnızca hangi fotoğrafların pahalı ölçüme gönderileceğini
+ * sıralamak için kullanılır.
  */
 @Singleton
 class BlurDetector @Inject constructor() {
 
     /**
-     * Laplacian çekirdeği — kenar tespiti için kullanılır.
-     * 3×3 boyutunda standart Laplacian kernel.
-     */
-    private val laplacianKernel = arrayOf(
-        intArrayOf(0, 1, 0),
-        intArrayOf(1, -4, 1),
-        intArrayOf(0, 1, 0)
-    )
-
-    /**
-     * Verilen bitmap'in bulanık olup olmadığını analiz eder.
+     * Thumbnail üzerinden **kaba** netlik göstergesi.
      *
-     * @param bitmap Analiz edilecek görüntü
-     * @param threshold Bulanıklık eşik değeri. Bu değerin altındaki skorlar bulanık kabul edilir.
-     * @return Pair<Boolean, Float> — (bulanık mı?, bulanıklık skoru)
+     * Ölçemediğinde [Double.MAX_VALUE] döner: aday sıralamasının sonuna düşsün, yani
+     * kanıt yokken fotoğraf pahalı ölçüme ve dolayısıyla işaretlenmeye aday olmasın.
      */
-    fun isBlurry(bitmap: Bitmap, threshold: Double = 100.0): Pair<Boolean, Float> {
+    fun roughSharpness(bitmap: Bitmap): Double {
         return try {
-            val grayscale = toGrayscale(bitmap)
-            val laplacianVariance = computeLaplacianVariance(grayscale)
-            val isBlurry = laplacianVariance < threshold
-            Pair(isBlurry, laplacianVariance.toFloat())
+            val width = bitmap.width
+            val height = bitmap.height
+            if (width < MIN_DIMENSION || height < MIN_DIMENSION) return Double.MAX_VALUE
+
+            val pixels = IntArray(width * height)
+            bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+            laplacianVariance(pixels, width, height)
         } catch (e: Exception) {
-            // Hata durumunda bulanık olarak işaretle
-            Pair(true, 0f)
+            android.util.Log.w(TAG, "Kaba netlik hesaplanamadı", e)
+            Double.MAX_VALUE
         }
     }
 
-    /**
-     * Bitmap'i gri tonlama piksel dizisine dönüştürür.
-     *
-     * @param bitmap Kaynak bitmap
-     * @return 2D gri tonlama piksel dizisi (0-255)
-     */
-    private fun toGrayscale(bitmap: Bitmap): Array<IntArray> {
-        val width = bitmap.width
-        val height = bitmap.height
-        val grayscale = Array(height) { IntArray(width) }
+    companion object {
 
-        for (y in 0 until height) {
-            for (x in 0 until width) {
-                val pixel = bitmap.getPixel(x, y)
-                val r = Color.red(pixel)
-                val g = Color.green(pixel)
-                val b = Color.blue(pixel)
-                // Luma formülü ile gri tonlama
-                grayscale[y][x] = (0.299 * r + 0.587 * g + 0.114 * b).toInt()
+        /** 3x3 Laplacian çekirdeği için gereken en küçük kenar uzunluğu. */
+        const val MIN_DIMENSION = 3
+
+        private const val TAG = "BlurDetector"
+
+        /**
+         * ARGB piksel dizisi üzerinde Laplacian varyansını hesaplar.
+         *
+         * Saf hesaplama — Android bağımlılığı yoktur, birim testlerinde doğrudan kullanılır.
+         *
+         * @param pixels Satır sıralı ARGB piksel dizisi (boyut = width * height)
+         * @param width Görüntü genişliği
+         * @param height Görüntü yüksekliği
+         * @return Laplacian yanıtlarının varyansı; kenar bilgisi arttıkça büyür
+         */
+        @JvmStatic
+        fun laplacianVariance(pixels: IntArray, width: Int, height: Int): Double {
+            if (width < MIN_DIMENSION || height < MIN_DIMENSION) return 0.0
+            require(pixels.size >= width * height) {
+                "piksel dizisi $width x $height için çok küçük"
             }
-        }
-        return grayscale
-    }
 
-    /**
-     * Gri tonlama görüntü üzerinde Laplacian konvolüsyonu uygulayarak
-     * varyansı hesaplar.
-     *
-     * @param grayscale Gri tonlama piksel dizisi
-     * @return Laplacian varyans değeri (düşük = bulanık)
-     */
-    private fun computeLaplacianVariance(grayscale: Array<IntArray>): Double {
-        val height = grayscale.size
-        val width = grayscale[0].size
+            val count = (width - 2) * (height - 2)
+            if (count <= 0) return 0.0
 
-        if (width < 3 || height < 3) return 0.0
+            // Gri tonlamaya çevir (ITU-R BT.601 ağırlıkları)
+            val gray = IntArray(width * height)
+            for (i in 0 until width * height) {
+                val p = pixels[i]
+                val r = (p shr 16) and 0xFF
+                val g = (p shr 8) and 0xFF
+                val b = p and 0xFF
+                gray[i] = (r * 299 + g * 587 + b * 114) / 1000
+            }
 
-        val laplacianValues = mutableListOf<Double>()
-
-        // Laplacian konvolüsyonu — kenarlardaki 1 piksellik sınır hariç
-        for (y in 1 until height - 1) {
-            for (x in 1 until width - 1) {
-                var sum = 0
-                for (ky in -1..1) {
-                    for (kx in -1..1) {
-                        sum += grayscale[y + ky][x + kx] * laplacianKernel[ky + 1][kx + 1]
-                    }
+            var sum = 0.0
+            var sumSq = 0.0
+            for (y in 1 until height - 1) {
+                val row = y * width
+                for (x in 1 until width - 1) {
+                    val lap = (gray[row - width + x]
+                            + gray[row + width + x]
+                            + gray[row + x - 1]
+                            + gray[row + x + 1]
+                            - 4 * gray[row + x]).toDouble()
+                    sum += lap
+                    sumSq += lap * lap
                 }
-                laplacianValues.add(sum.toDouble())
             }
+
+            val mean = sum / count
+            return ((sumSq / count) - (mean * mean)).coerceAtLeast(0.0)
         }
-
-        if (laplacianValues.isEmpty()) return 0.0
-
-        // Varyans hesaplama
-        val mean = laplacianValues.average()
-        val variance = laplacianValues.sumOf { (it - mean) * (it - mean) } / laplacianValues.size
-        return variance
     }
 }

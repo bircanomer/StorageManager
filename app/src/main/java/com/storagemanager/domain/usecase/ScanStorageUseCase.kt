@@ -1,7 +1,10 @@
 package com.storagemanager.domain.usecase
 
+import android.content.Context
+import com.storagemanager.R
 import com.storagemanager.domain.model.ScanState
 import com.storagemanager.domain.repository.StorageRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -15,6 +18,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class ScanStorageUseCase @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: StorageRepository
 ) {
 
@@ -31,15 +35,20 @@ class ScanStorageUseCase @Inject constructor(
      */
     operator fun invoke(onProgress: (Float, String) -> Unit = { _, _ -> }): Flow<ScanState> = flow {
         try {
-            emit(ScanState.Scanning(progress = 0f, currentTask = "Tarama başlatılıyor..."))
+            emit(
+                ScanState.Scanning(
+                    progress = 0f,
+                    currentTask = context.getString(R.string.progress_starting)
+                )
+            )
 
-            val result = repository.fullScan { progress, task ->
-                onProgress(progress, task)
-            }
+            val result = repository.fullScan(
+                onProgress = { progress, task -> onProgress(progress, task) }
+            )
 
             emit(ScanState.Completed(result))
         } catch (e: Exception) {
-            emit(ScanState.Error(e.message ?: "Bilinmeyen bir hata oluştu"))
+            emit(ScanState.Error(e.message ?: context.getString(R.string.unknown_error)))
         }
     }
 }

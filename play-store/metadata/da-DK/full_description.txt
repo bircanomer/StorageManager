@@ -1,0 +1,12 @@
+Find og fjern overflødige filer med AI-drevet analyse
+
+✓ Find slørede billeder og dubletter
+✓ Store filer — Over 50 MB
+✓ Apps — Ubrugte
+✓ App-caches — Ryd sikkert
+✓ Dublerede dokumenter og downloads
+✓ Tomme mapper, log- og temp-filer
+✓ Lagerkort
+✓ Papirkurv
+
+Du bliver bedt om tilladelse til at læse dine billeder og filer. Ingen data forlader din enhed.

@@ -14,3 +14,7 @@ local.properties
 *.aab
 *.jks
 *.keystore
+
+# Play Store ekran görüntüleri betikle üretiliyor; depoda tutulmuyor
+/play-store/screenshots/
+/play-store/screenshots-9x16/

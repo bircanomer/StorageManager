@@ -1,0 +1,12 @@
+Pronađite i uklonite nepotrebne datoteke uz analizu pokretanu umjetnom inteligencijom
+
+✓ Pronađite mutne i duplicirane fotografije
+✓ Velike datoteke — Iznad 50 MB
+✓ Aplikacije — Nekorištene
+✓ Predmemorija aplikacija — Sigurno čišćenje
+✓ Duplicirani dokumenti i preuzimanja
+✓ Prazne mape, zapisi i privremene datoteke
+✓ Karta pohrane
+✓ Smeće
+
+Zatražit ćemo dopuštenje za čitanje vaših fotografija i datoteka. Nijedan podatak ne napušta vaš uređaj.

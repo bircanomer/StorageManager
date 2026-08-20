@@ -1,0 +1,12 @@
+Vind en verwijder overbodige bestanden met AI-analyse
+
+✓ Vind onscherpe en dubbele foto\'s
+✓ Grote bestanden — Boven 50 MB
+✓ Apps — Ongebruikt
+✓ App-caches — Veilig opruimen
+✓ Dubbele documenten en downloads
+✓ Lege mappen, log- en tijdelijke bestanden
+✓ Opslagkaart
+✓ Prullenbak
+
+We vragen toestemming om je foto\'s en bestanden te lezen. Er verlaat geen data je apparaat.

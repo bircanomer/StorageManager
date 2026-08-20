@@ -1,0 +1,12 @@
+Znajdź i usuń zbędne pliki dzięki analizie opartej na SI
+
+✓ Znajdź rozmyte i powtórzone zdjęcia
+✓ Duże pliki — Powyżej 50 MB
+✓ Aplikacje — Nieużywane
+✓ Pamięć podręczna aplikacji — Bezpieczne czyszczenie
+✓ Powtórzone dokumenty i pobrane pliki
+✓ Puste foldery, logi i pliki tymczasowe
+✓ Mapa pamięci
+✓ Kosz
+
+Poprosimy o dostęp do zdjęć i plików. Żadne dane nie opuszczają urządzenia.

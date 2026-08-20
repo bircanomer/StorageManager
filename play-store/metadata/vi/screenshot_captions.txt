@@ -1,0 +1,4 @@
+Trình quản lý bộ nhớ thông minh
+Tìm ảnh mờ và ảnh trùng
+Tệp và video trên 50 MB
+Bản đồ bộ nhớ

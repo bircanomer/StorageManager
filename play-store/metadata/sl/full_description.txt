@@ -1,0 +1,12 @@
+Poiščite in odstranite nepotrebne datoteke z analizo, ki jo poganja UI
+
+✓ Poiščite zamegljene in podvojene fotografije
+✓ Velike datoteke — Nad 50 MB
+✓ Aplikacije — Neuporabljene
+✓ Predpomnilnik aplikacij — Varno počisti
+✓ Podvojeni dokumenti in prenosi
+✓ Prazne mape, dnevniške in začasne datoteke
+✓ Zemljevid shrambe
+✓ Koš
+
+Prosili vas bomo za dovoljenje za branje vaših fotografij in datotek. Noben podatek ne zapusti vaše naprave.

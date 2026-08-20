@@ -15,7 +15,8 @@ import javax.inject.Inject
 data class CacheUiState(
     val cacheInfos: List<CacheInfo> = emptyList(),
     val totalCacheSize: Long = 0L,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false
 )
 
 @HiltViewModel
@@ -23,29 +24,58 @@ class CacheViewModel @Inject constructor(
     private val repository: StorageRepository
 ) : ViewModel() {
 
+    private val TAG = "CacheViewModel"
+
     private val _uiState = MutableStateFlow(CacheUiState())
     val uiState: StateFlow<CacheUiState> = _uiState.asStateFlow()
 
     init {
-        loadCache()
+        loadCachedThenRefreshIfNeeded()
     }
 
-    fun loadCache() {
+    /**
+     * Önce son taramanın önbelleğe alınmış sonucunu gösterir.
+     *
+     * Her ekran açılışında yüzlerce uygulama için StorageStats sorgusu yapmak
+     * (uygulama başına bir binder çağrısı) gözle görülür bir gecikme yaratıyordu.
+     */
+    private fun loadCachedThenRefreshIfNeeded() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
             try {
-                val cacheInfos = repository.getCacheInfo()
-                val total = cacheInfos.sumOf { it.cacheSize }
-                _uiState.update {
-                    it.copy(
-                        cacheInfos = cacheInfos.sortedByDescending { c -> c.cacheSize },
-                        totalCacheSize = total,
-                        isLoading = false
-                    )
+                val cached = repository.getCachedScanResults()?.cacheInfos.orEmpty()
+                if (cached.isNotEmpty()) {
+                    publish(cached, isLoading = false)
+                    return@launch
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false) }
+                android.util.Log.w(TAG, "Önbellekli veriler okunamadı", e)
             }
+            loadCache()
+        }
+    }
+
+    /** Cihazdan taze önbellek bilgisi okur. */
+    fun loadCache() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isRefreshing = true, isLoading = it.cacheInfos.isEmpty()) }
+            try {
+                publish(repository.getCacheInfo(), isLoading = false)
+            } catch (e: Exception) {
+                android.util.Log.w(TAG, "Önbellek bilgisi alınamadı", e)
+                _uiState.update { it.copy(isLoading = false, isRefreshing = false) }
+            }
+        }
+    }
+
+    private fun publish(cacheInfos: List<CacheInfo>, isLoading: Boolean) {
+        val sorted = cacheInfos.sortedByDescending { it.cacheSize }
+        _uiState.update {
+            it.copy(
+                cacheInfos = sorted,
+                totalCacheSize = sorted.sumOf { info -> info.cacheSize },
+                isLoading = isLoading,
+                isRefreshing = false
+            )
         }
     }
 }

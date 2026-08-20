@@ -1,20 +1,24 @@
 package com.storagemanager.scanner
 
 import android.app.Application
+import android.app.usage.StorageStats
 import android.app.usage.StorageStatsManager
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
-import android.os.Build
+import android.os.Process
+import android.os.UserHandle
 import android.os.storage.StorageManager
+import android.util.Log
 import com.storagemanager.domain.model.CacheInfo
 import com.storagemanager.domain.model.UnusedApp
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.coroutineContext
 
 /**
  * Uygulama analiz implementasyonu.
@@ -27,6 +31,26 @@ class AppAnalyzerImpl @Inject constructor(
     private val application: Application
 ) : AppAnalyzer {
 
+    private companion object {
+        const val TAG = "AppAnalyzer"
+    }
+
+    /** Bir uygulamanın boyut + önbellek bilgisi — tek StorageStats sorgusundan üretilir. */
+    private data class AppSizes(val appBytes: Long, val cacheBytes: Long)
+
+    private val storageStatsManager: StorageStatsManager? by lazy {
+        try {
+            application.getSystemService(Context.STORAGE_STATS_SERVICE) as? StorageStatsManager
+        } catch (e: Exception) {
+            Log.w(TAG, "StorageStatsManager alınamadı", e)
+            null
+        }
+    }
+
+    private val userHandle: UserHandle by lazy {
+        UserHandle.getUserHandleForUid(Process.myUid())
+    }
+
     /**
      * Belirtilen süredir kullanılmamış uygulamaları tespit eder.
      *
@@ -38,7 +62,6 @@ class AppAnalyzerImpl @Inject constructor(
             val usageStatsManager = application.getSystemService(Context.USAGE_STATS_SERVICE)
                     as? UsageStatsManager ?: return@withContext emptyList()
 
-            // Son 1 yılın kullanım istatistiklerini sorgula
             val endTime = System.currentTimeMillis()
             val startTime = endTime - TimeUnit.DAYS.toMillis(365)
 
@@ -48,7 +71,6 @@ class AppAnalyzerImpl @Inject constructor(
                 endTime
             )
 
-            // Paket adı → son kullanım zamanı haritası
             val lastUsedMap = mutableMapOf<String, Long>()
             usageStats?.forEach { stats ->
                 val existing = lastUsedMap[stats.packageName] ?: 0L
@@ -58,52 +80,46 @@ class AppAnalyzerImpl @Inject constructor(
             }
 
             val cutoffTime = endTime - TimeUnit.DAYS.toMillis(daysSinceLastUse.toLong())
-
-            // Yüklü uygulamaları al ve filtrele
             val packageManager = application.packageManager
-            val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-
+            // GET_META_DATA her uygulamanın manifest meta-data'sını okur; burada
+            // kullanılmadığı için bayrak 0 ile çağırmak sorguyu belirgin şekilde hızlandırır.
+            val installedApps = packageManager.getInstalledApplications(0)
             val unusedApps = mutableListOf<UnusedApp>()
 
             for (appInfo in installedApps) {
+                coroutineContext.ensureActive()
                 try {
-                    // Sistem uygulamalarını atla
                     if (appInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) continue
 
                     val packageName = appInfo.packageName
                     val lastUsed = lastUsedMap[packageName] ?: 0L
+                    if (lastUsed >= cutoffTime) continue
 
-                    // Son kullanım zamanı eşik değerinden eskiyse
-                    if (lastUsed < cutoffTime) {
-                        val appName = packageManager.getApplicationLabel(appInfo).toString()
-                        val appSize = getAppSize(packageName)
-                        val cacheSize = getAppCacheSize(packageName)
-                        val installDate = try {
-                            packageManager.getPackageInfo(packageName, 0).firstInstallTime
-                        } catch (_: Exception) {
-                            0L
-                        }
-
-                        unusedApps.add(
-                            UnusedApp(
-                                packageName = packageName,
-                                appName = appName,
-                                appSize = appSize,
-                                cacheSize = cacheSize,
-                                lastUsed = lastUsed,
-                                installDate = installDate
-                            )
-                        )
+                    // Tek sorgu: boyut ve önbellek birlikte okunur (eskiden iki ayrı IPC vardı)
+                    val sizes = queryAppSizes(appInfo)
+                    val installDate = try {
+                        packageManager.getPackageInfo(packageName, 0).firstInstallTime
+                    } catch (e: Exception) {
+                        0L
                     }
-                } catch (_: Exception) {
-                    // Tek bir uygulama işlenemezse atla
+
+                    unusedApps += UnusedApp(
+                        packageName = packageName,
+                        appName = packageManager.getApplicationLabel(appInfo).toString(),
+                        appSize = sizes.appBytes,
+                        cacheSize = sizes.cacheBytes,
+                        lastUsed = lastUsed,
+                        installDate = installDate
+                    )
+                } catch (e: Exception) {
+                    Log.w(TAG, "Uygulama işlenemedi: ${appInfo.packageName}", e)
                 }
             }
 
-            // Boyuta göre azalan sırada sırala
             unusedApps.sortByDescending { it.appSize }
             unusedApps
         } catch (e: Exception) {
+            Log.e(TAG, "Kullanılmayan uygulama taraması başarısız", e)
             emptyList()
         }
     }
@@ -111,109 +127,80 @@ class AppAnalyzerImpl @Inject constructor(
     /**
      * Tüm yüklü uygulamaların önbellek bilgilerini döndürür.
      *
-     * API 26+ cihazlarda StorageStatsManager kullanılır.
-     *
      * @return Uygulamaların önbellek bilgileri (boyuta göre azalan sırada)
      */
     override suspend fun getCacheInfo(): List<CacheInfo> = withContext(Dispatchers.IO) {
         try {
             val packageManager = application.packageManager
-            val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+            val installedApps = packageManager.getInstalledApplications(0)
             val cacheInfos = mutableListOf<CacheInfo>()
 
             for (appInfo in installedApps) {
+                coroutineContext.ensureActive()
                 try {
-                    val packageName = appInfo.packageName
-                    val appName = packageManager.getApplicationLabel(appInfo).toString()
-                    val cacheSize = getAppCacheSize(packageName)
-
+                    val cacheSize = queryAppSizes(appInfo).cacheBytes
                     if (cacheSize > 0) {
-                        cacheInfos.add(
-                            CacheInfo(
-                                packageName = packageName,
-                                appName = appName,
-                                cacheSize = cacheSize
-                            )
+                        cacheInfos += CacheInfo(
+                            packageName = appInfo.packageName,
+                            appName = packageManager.getApplicationLabel(appInfo).toString(),
+                            cacheSize = cacheSize
                         )
                     }
-                } catch (_: Exception) {
-                    // Tek bir uygulama işlenemezse atla
+                } catch (e: Exception) {
+                    Log.w(TAG, "Önbellek bilgisi alınamadı: ${appInfo.packageName}", e)
                 }
             }
 
-            // Önbellek boyutuna göre azalan sırada sırala
             cacheInfos.sortByDescending { it.cacheSize }
             cacheInfos
         } catch (e: Exception) {
+            Log.e(TAG, "Önbellek taraması başarısız", e)
             emptyList()
         }
     }
 
     /**
-     * Bir uygulamanın toplam boyutunu hesaplar.
+     * Uygulamanın boyut ve önbellek bilgisini **tek** StorageStats sorgusuyla okur.
      *
-     * API 26+ cihazlarda StorageStatsManager, daha eski cihazlarda
-     * APK dosya boyutu kullanılır.
-     *
-     * @param packageName Uygulama paket adı
-     * @return Uygulama boyutu (byte)
+     * Sorgu başarısız olursa (izin yoksa) APK boyutu + fiziksel cache klasörüne düşer.
      */
-    private fun getAppSize(packageName: String): Long {
-        return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val storageStatsManager = application.getSystemService(Context.STORAGE_STATS_SERVICE)
-                        as StorageStatsManager
-                val storageManager = application.getSystemService(Context.STORAGE_SERVICE)
-                        as StorageManager
-                val uuid = storageManager.getUuidForPath(application.filesDir)
-                val uid = application.packageManager.getApplicationInfo(packageName, 0).uid
-                val stats = storageStatsManager.queryStatsForUid(uuid, uid)
-                stats.appBytes + stats.dataBytes
-            } else {
-                val appInfo = application.packageManager.getApplicationInfo(packageName, 0)
-                val file = java.io.File(appInfo.sourceDir)
-                if (file.exists()) file.length() else 0L
-            }
+    private fun queryAppSizes(appInfo: ApplicationInfo): AppSizes {
+        val stats: StorageStats? = try {
+            storageStatsManager?.queryStatsForPackage(
+                StorageManager.UUID_DEFAULT,
+                appInfo.packageName,
+                userHandle
+            )
         } catch (e: Exception) {
-            0L
+            // PACKAGE_USAGE_STATS izni verilmemişse burası her uygulamada tetiklenir;
+            // gürültü yapmamak için ayrıntılı log basmıyoruz.
+            null
         }
+
+        if (stats != null) {
+            return AppSizes(appBytes = stats.appBytes + stats.dataBytes, cacheBytes = stats.cacheBytes)
+        }
+
+        return AppSizes(
+            appBytes = apkSize(appInfo),
+            cacheBytes = physicalCacheSize(appInfo)
+        )
     }
 
-    /**
-     * Bir uygulamanın önbellek boyutunu hesaplar.
-     *
-     * API 26+ cihazlarda StorageStatsManager, daha eski cihazlarda
-     * uygulama cache dizini boyutu kullanılır.
-     *
-     * @param packageName Uygulama paket adı
-     * @return Önbellek boyutu (byte)
-     */
-    private fun getAppCacheSize(packageName: String): Long {
-        return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val storageStatsManager = application.getSystemService(Context.STORAGE_STATS_SERVICE)
-                        as StorageStatsManager
-                val storageManager = application.getSystemService(Context.STORAGE_SERVICE)
-                        as StorageManager
-                val uuid = storageManager.getUuidForPath(application.filesDir)
-                val uid = application.packageManager.getApplicationInfo(packageName, 0).uid
-                val stats = storageStatsManager.queryStatsForUid(uuid, uid)
-                stats.cacheBytes
-            } else {
-                val appInfo = application.packageManager.getApplicationInfo(packageName, 0)
-                val cacheDir = java.io.File(appInfo.dataDir, "cache")
-                if (cacheDir.exists()) {
-                    var size = 0L
-                    cacheDir.walkTopDown().forEach { file ->
-                        if (file.isFile) size += file.length()
-                    }
-                    size
-                } else {
-                    0L
-                }
-            }
-        } catch (e: Exception) {
+    private fun apkSize(appInfo: ApplicationInfo): Long = try {
+        appInfo.sourceDir?.let { java.io.File(it).length() } ?: 0L
+    } catch (e: Exception) {
+        0L
+    }
+
+    private fun physicalCacheSize(appInfo: ApplicationInfo): Long = try {
+        val cacheDir = java.io.File(appInfo.dataDir, "cache")
+        if (cacheDir.exists()) {
+            cacheDir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+        } else {
             0L
         }
+    } catch (e: Exception) {
+        0L
     }
 }

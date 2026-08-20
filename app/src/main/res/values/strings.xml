@@ -1,39 +1,360 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Varsayılan (İngilizce) metinler.
+    Çeviriler res/values-XX/strings.xml altındadır; eksik anahtar olursa Android bu dosyaya düşer.
+-->
 <resources>
-    <string name="app_name">StorageManager</string>
-    <string name="dashboard_title">Depolama Yöneticisi</string>
-    <string name="scan_button">Akıllı Tarama Başlat</string>
-    <string name="scanning">Taranıyor…</string>
-    <string name="photos_category">Fotoğraflar</string>
-    <string name="apps_category">Uygulamalar</string>
-    <string name="cache_category">Önbellek</string>
-    <string name="files_category">Büyük Dosyalar</string>
-    <string name="settings_title">Ayarlar</string>
-    <string name="total_space">Toplam Alan</string>
-    <string name="used_space">Kullanılan</string>
-    <string name="free_space">Boş Alan</string>
-    <string name="cleanable_space">Temizlenebilir</string>
-    <string name="delete_selected">Seçilenleri Sil</string>
-    <string name="select_all">Tümünü Seç</string>
-    <string name="confirm_delete_title">Silme Onayı</string>
-    <string name="confirm_delete_message">Seçili %1$d öğeyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.</string>
-    <string name="delete_success">%1$d öğe başarıyla silindi</string>
-    <string name="blurry_photos">Bulanık Fotoğraflar</string>
-    <string name="duplicate_photos">Duplike Fotoğraflar</string>
-    <string name="screenshots">Ekran Görüntüleri</string>
-    <string name="old_photos">Eski Fotoğraflar</string>
-    <string name="unused_apps">Kullanılmayan Uygulamalar</string>
-    <string name="large_files">Büyük Dosyalar</string>
-    <string name="last_used">Son kullanım: %1$s</string>
-    <string name="days_ago">%1$d gün önce</string>
-    <string name="never_used">Hiç kullanılmadı</string>
-    <string name="uninstall">Kaldır</string>
-    <string name="cancel">İptal</string>
-    <string name="ok">Tamam</string>
-    <string name="permission_required">İzin Gerekli</string>
-    <string name="storage_permission_rationale">Dosyalarınızı taramak için depolama izni gereklidir.</string>
-    <string name="grant_permission">İzin Ver</string>
-    <string name="onboarding_title">Telefonunu Temizle</string>
-    <string name="onboarding_subtitle">AI destekli akıllı analiz ile gereksiz dosyaları bul ve temizle</string>
-    <string name="get_started">Başlayalım</string>
+
+    <!-- Uygulama adı çevrilmez -->
+    <string name="app_name" translatable="false">StorageManager</string>
+
+    <!-- ══ Ortak ══════════════════════════════════════════════════════ -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
+    <string name="close">Close</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Clear selection</string>
+    <string name="delete">Delete</string>
+    <string name="open">Open</string>
+    <string name="sort">Sort</string>
+    <string name="selected">Selected</string>
+    <string name="not_selected">Not selected</string>
+    <string name="please_wait">Please wait</string>
+    <string name="unknown_error">Something went wrong</string>
+    <string name="days_format">%1$d days</string>
+    <string name="mb_format">%1$d MB</string>
+    <string name="item_count">%1$d items</string>
+    <string name="tap_to_open">Tap to open</string>
+    <string name="rescan">Rescan</string>
+    <string name="retry">Try again</string>
+    <string name="error_with_message">Error: %1$s</string>
+    <string name="percent_format">%1$d%%</string>
+    <string name="meta_separator">%1$s • %2$s</string>
+    <string name="clear">Clear</string>
+    <string name="scan_scope_icon">Scan scope</string>
+    <string name="dashboard_categories">Categories</string>
+    <string name="sort_date_desc">Date (new → old)</string>
+    <string name="sort_date_asc">Date (old → new)</string>
+    <string name="photos_group_short">Group #%1$d</string>
+    <string name="junk_all_clean">Your system is completely clean! ✨</string>
+
+    <!-- Göreli zaman -->
+    <string name="time_never_used">never used</string>
+    <string name="time_just_now">just now</string>
+    <string name="time_minutes_ago">%1$d minutes ago</string>
+    <string name="time_hours_ago">%1$d hours ago</string>
+    <string name="time_yesterday">yesterday</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
+    <string name="time_months_ago">%1$d months ago</string>
+    <string name="time_years_ago">%1$d years ago</string>
+
+    <!-- Sıralama seçenekleri -->
+    <string name="sort_size_desc">Size (large → small)</string>
+    <string name="sort_size_asc">Size (small → large)</string>
+    <string name="sort_name_asc">Name (A → Z)</string>
+    <string name="sort_app_name_asc">App name (A → Z)</string>
+    <string name="sort_unused_first">Never used first</string>
+
+    <!-- ══ Onboarding ═════════════════════════════════════════════════ -->
+    <string name="onboarding_title">Clean up your phone</string>
+    <string name="onboarding_subtitle">Find and remove junk files with AI-powered analysis</string>
+    <string name="onboarding_feature_photos">Find blurry and duplicate photos</string>
+    <string name="onboarding_feature_apps">Spot apps you never open</string>
+    <string name="onboarding_feature_cache">Clear cache safely</string>
+    <string name="onboarding_feature_files">Discover large files</string>
+    <string name="onboarding_privacy_note">You will be asked for permission to read your photos and files. No data ever leaves your device.</string>
+    <string name="onboarding_permissions_note">You can grant advanced permissions (usage stats, all files access) any time from Settings.</string>
+    <string name="get_started">Get started</string>
+
+    <!-- ══ Dashboard ══════════════════════════════════════════════════ -->
+    <string name="dashboard_title">Smart Storage Manager</string>
+    <string name="scan_button">Start smart scan</string>
+    <string name="scanning">Scanning…</string>
+    <string name="scan_preparing">Getting ready…</string>
+    <string name="scan_customize">Customise scan scope (%1$d categories)</string>
+    <string name="scan_scope_title">Choose scan scope</string>
+    <string name="scan_scope_hint">Pick the areas you want scanned:</string>
+    <string name="scan_selected_categories">Scan selection (%1$d categories)</string>
+    <string name="free_space_label">Free space (%1$s%%)</string>
+    <string name="used_of_total">%1$s / %2$s used</string>
+    <string name="available_space">Available space: </string>
+    <string name="trash_title">Trash</string>
+    <string name="treemap_title">Storage map</string>
+
+    <!-- Kategori kartları -->
+    <string name="card_photos_subtitle">Blurry &amp; duplicate</string>
+    <string name="card_apps_subtitle">Unused</string>
+    <string name="card_cache_subtitle">Clean safely</string>
+    <string name="card_large_files_subtitle">Over 50 MB</string>
+    <string name="card_downloads_subtitle">Duplicate documents</string>
+    <string name="card_system_junk_subtitle">Empty folders &amp; logs</string>
+
+    <!-- ══ Tarama kategorileri (ScanCategory) ═════════════════════════ -->
+    <string name="category_photos">Photos</string>
+    <string name="category_photos_desc">Blurry, duplicate and screenshots</string>
+    <string name="category_unused_apps">Unused apps</string>
+    <string name="category_unused_apps_desc">Apps you have not opened in a long time</string>
+    <string name="category_cache">App caches</string>
+    <string name="category_cache_desc">Temporary app data</string>
+    <string name="category_large_files">Large files</string>
+    <string name="category_large_files_desc">Files and videos over 50 MB</string>
+    <string name="category_downloads">Downloads &amp; documents</string>
+    <string name="category_downloads_desc">Duplicate documents and downloads</string>
+    <string name="category_system_junk">System junk</string>
+    <string name="category_system_junk_desc">Empty folders, log and temp files</string>
+    <string name="category_apps">Apps</string>
+    <string name="category_other">Other</string>
+    <string name="category_all">All</string>
+    <string name="category_video">Video</string>
+    <string name="category_image">Photos</string>
+    <string name="category_audio">Music / audio</string>
+    <string name="category_document">Documents</string>
+
+    <!-- ══ Fotoğraflar ════════════════════════════════════════════════ -->
+    <string name="photos_title">Photo analysis</string>
+    <string name="junk_type_blurry">Blurry photos</string>
+    <string name="junk_type_duplicate">Duplicate photos</string>
+    <string name="junk_type_screenshot">Screenshots</string>
+    <string name="junk_type_old">Old photos</string>
+    <string name="tab_blurry">Blurry</string>
+    <string name="tab_duplicate">Duplicate</string>
+    <string name="tab_screenshot">Screens</string>
+    <string name="tab_old">Old</string>
+    <string name="photos_blurry_desc">Photos detected as out of focus or low quality by on-device analysis.</string>
+    <string name="photos_duplicate_desc">Photos that appear more than once on your device, identical or nearly identical.</string>
+    <string name="photos_screenshot_desc">Screenshots found in screenshot folders or matching your screen resolution.</string>
+    <string name="photos_old_desc">Photos older than the period you picked (change it in Settings).</string>
+    <string name="photos_analyzing">Analysing photos…</string>
+    <string name="photos_empty_category">No photos in this category</string>
+    <string name="photos_all_clean">All your photos look clean! 🎉</string>
+    <string name="photos_summary">%1$d photos • %2$s</string>
+    <string name="photos_select_duplicates">Select copies</string>
+    <string name="photos_group_title">Photo group #%1$d (%2$d items)</string>
+    <string name="photos_delete_count">Delete %1$d photos</string>
+    <string name="photos_delete_title">Delete photos</string>
+    <string name="photos_delete_message">%1$d photos will be deleted and %2$s freed up.\n\nThis cannot be undone.</string>
+    <string name="photos_deleting">Deleting photos, please wait…</string>
+
+    <!-- ══ Uygulamalar ════════════════════════════════════════════════ -->
+    <string name="apps_title">Unused apps</string>
+    <string name="apps_summary">%1$d apps • using %2$s</string>
+    <string name="apps_empty">No unused apps found</string>
+    <string name="apps_reset_filter">Rescan / reset filter</string>
+    <string name="apps_uninstall">Uninstall</string>
+    <string name="apps_uninstall_selected">Uninstall selection</string>
+    <string name="apps_uninstall_selected_count">Uninstall %1$d selected</string>
+    <string name="apps_size_with_cache">%1$s + %2$s cache</string>
+    <string name="apps_never_used_tap">Never used • tap to open</string>
+    <string name="apps_last_used_tap">Used %1$d days ago • tap to open</string>
+    <string name="apps_open_app">Open app</string>
+    <string name="apps_days_short">%1$d d</string>
+
+    <!-- ══ Önbellek ═══════════════════════════════════════════════════ -->
+    <string name="cache_title">Cache manager</string>
+    <string name="cache_loading">Loading cache details…</string>
+    <string name="cache_clean_state">Cache is clean! 🎉</string>
+    <string name="cache_nothing_found">No cache found to clear</string>
+    <string name="cache_total">Total cache</string>
+    <string name="cache_explanation">Cache is temporary data apps keep so they start faster. Clearing it is safe and frees up space.</string>
+    <string name="cache_clear_all">Clear all cache</string>
+    <string name="cache_android_note">ℹ️ Android does not allow apps to clear another app\'s cache directly. The button above takes you to your device storage settings.</string>
+    <string name="cache_open_app_info">Open app info</string>
+
+    <!-- ══ Büyük dosyalar ═════════════════════════════════════════════ -->
+    <string name="files_title">Large files</string>
+    <string name="files_empty">No large files found</string>
+    <string name="files_empty_category">No files in this category</string>
+    <string name="files_empty_hint">Nothing over %1$d MB 👍</string>
+    <string name="files_empty_category_hint">No files over %1$d MB in %2$s</string>
+    <string name="files_delete_title">Delete files</string>
+    <string name="files_delete_message">%1$d files will be deleted and %2$s freed up.\n\nThis cannot be undone.</string>
+    <string name="files_deleting">Deleting files, please wait…</string>
+    <string name="files_deleting_short">Deleting…</string>
+    <string name="files_delete_count">Delete %1$d files (%2$s)</string>
+    <string name="files_min_size_chip">%1$d MB+</string>
+    <string name="unknown_date">Unknown date</string>
+    <string name="play">Play</string>
+    <string name="apps_analyzing">Analysing apps…</string>
+    <string name="apps_congrats">Nice work! 🎉</string>
+    <string name="downloads_group_title">Duplicate group (%1$d copies)</string>
+
+    <!-- ══ İndirilenler ═══════════════════════════════════════════════ -->
+    <string name="downloads_title">Documents &amp; downloads</string>
+    <string name="downloads_tab">Downloads</string>
+    <string name="downloads_duplicates_tab">Duplicates</string>
+    <string name="downloads_no_duplicates">No duplicate documents found ✨</string>
+    <string name="downloads_no_junk">No junk found in Downloads ✨</string>
+    <string name="downloads_summary_title">Duplicate document summary</string>
+    <string name="downloads_summary_groups">%1$d files across %2$d groups.</string>
+    <string name="downloads_summary_cleanable">Copies that can be deleted: %1$d • reclaimable: %2$s</string>
+    <string name="downloads_delete_copies">Delete all copies (%1$s)</string>
+    <string name="downloads_delete_title">Delete all copies?</string>
+    <string name="downloads_delete_message">Delete every copy of the duplicate documents? Your original files are kept.</string>
+    <string name="downloads_move_to_trash">Move to trash</string>
+    <string name="downloads_item_meta">%1$s • tap to open</string>
+    <string name="downloads_item_meta_category">%1$s • %2$s • tap to open</string>
+
+    <!-- ══ Sistem çöpleri ═════════════════════════════════════════════ -->
+    <string name="junk_title">Empty folders &amp; system junk</string>
+    <string name="junk_scanning">Scanning empty folders and system junk…</string>
+    <string name="junk_cleanable">Cleanable system junk</string>
+    <string name="junk_clean_all">Clean all (%1$d items)</string>
+    <string name="junk_empty_folder">Empty folder</string>
+    <string name="junk_log_file">Log file</string>
+    <string name="junk_temp_file">Temporary file</string>
+    <string name="junk_system_cache">System cache</string>
+
+    <!-- ══ Çöp kutusu ═════════════════════════════════════════════════ -->
+    <string name="trash_empty_action">Empty</string>
+    <string name="trash_is_empty">Trash is empty</string>
+    <string name="trash_total">Total in trash</string>
+    <string name="trash_restore">Restore</string>
+    <string name="trash_delete_forever">Delete permanently</string>
+
+    <!-- ══ Depolama haritası ══════════════════════════════════════════ -->
+    <string name="treemap_calculating">Building the storage map…</string>
+    <string name="treemap_blocks">Visual block map</string>
+    <string name="treemap_folder_details">Folder details</string>
+    <string name="treemap_file_meta">%1$d%% • tap to open</string>
+    <string name="file_open_failed">This file could not be opened</string>
+
+    <!-- ══ Depolama özeti ═════════════════════════════════════════════ -->
+    <string name="total_space">Total space</string>
+    <string name="used_space">Used</string>
+    <string name="free_space">Free space</string>
+    <string name="cleanable_space">Cleanable</string>
+
+    <!-- ══ Medya önizleme ═════════════════════════════════════════════ -->
+    <string name="preview_external_player">External player</string>
+    <string name="preview_previous">Previous</string>
+    <string name="preview_next">Next</string>
+    <string name="preview_play">Play</string>
+    <string name="preview_select">Select</string>
+    <string name="preview_delete_this">Delete this file</string>
+
+    <!-- ══ Tarama ilerlemesi ══════════════════════════════════════════ -->
+    <string name="progress_starting">Starting scan…</string>
+    <string name="progress_photos_listing">Listing photos…</string>
+    <string name="progress_photos_grouping">Grouping duplicate photos…</string>
+    <string name="progress_photos_scanning">Scanning photos (%1$d%%)…</string>
+    <string name="progress_photos_scanning_ai">Scanning photos with AI (%1$d%%)…</string>
+    <string name="progress_photos_sharpness">Checking sharpness (%1$d%%)…</string>
+    <string name="progress_photos_sharpness_ai">Checking sharpness with AI (%1$d%%)…</string>
+    <string name="progress_photos_done">Photo scan complete (%1$d)</string>
+    <string name="progress_apps">Checking unused apps…</string>
+    <string name="progress_apps_done">App scan complete (%1$d)</string>
+    <string name="progress_cache">Reading cache details…</string>
+    <string name="progress_cache_done">Cache scan complete (%1$d)</string>
+    <string name="progress_large_files">Looking for large files…</string>
+    <string name="progress_large_files_done">Large files complete (%1$d)</string>
+    <string name="progress_downloads">Scanning documents &amp; downloads…</string>
+    <string name="progress_downloads_done">Downloads complete</string>
+    <string name="progress_system_junk">Scanning system junk…</string>
+    <string name="progress_system_junk_done">System junk complete (%1$d)</string>
+    <string name="progress_complete">Scan complete</string>
+
+    <!-- ══ Bildirimler ════════════════════════════════════════════════ -->
+    <string name="notification_channel_name">Cleanup reminders</string>
+    <string name="notification_channel_description">Alerts about low storage and cleanable space</string>
+    <string name="notification_storage_warning_title">Storage warning</string>
+    <string name="notification_storage_warning_message">Your device storage is %1$d%% full. Tap to clean up now.</string>
+    <string name="notification_cleanable_title">There is space to reclaim</string>
+    <string name="notification_cleanable_message">Your last scan found more than %1$d GB of cleanable space.</string>
+
+    <!-- ══ Özet satırları ═════════════════════════════════════════════ -->
+    <string name="apps_count">%1$d apps</string>
+    <string name="files_summary_total">%1$d files • %2$s total</string>
+
+    <!-- ══ İzinler ════════════════════════════════════════════════════ -->
+    <string name="permission_required">Permission needed</string>
+    <string name="storage_permission_rationale">Storage permission is required to scan your files.</string>
+    <string name="grant_permission">Grant permission</string>
+    <string name="permission_granted">Granted</string>
+    <string name="permission_usage_stats">Usage access</string>
+    <string name="permission_usage_stats_desc">Needed to detect apps you never open</string>
+    <string name="permission_all_files">All files access</string>
+    <string name="permission_all_files_desc">Needed to scan large files and system junk</string>
+
+    <!-- ══ Ayarlar ════════════════════════════════════════════════════ -->
+    <string name="settings_title">Settings</string>
+    <string name="section_pro">Pro</string>
+    <string name="section_language">Language</string>
+    <string name="section_scan_settings">Scan settings</string>
+    <string name="section_general">General</string>
+    <string name="section_developer" translatable="false">Developer</string>
+    <string name="debug_pro" translatable="false">Pro unlocked (debug)</string>
+    <string name="debug_pro_desc" translatable="false">Local override for testing. Debug builds only.</string>
+    <string name="section_permissions">Permissions</string>
+    <string name="section_about">About</string>
+    <string name="language_title">App language</string>
+    <string name="language_system_default">System default</string>
+    <string name="blur_threshold">Blur threshold</string>
+    <string name="blur_threshold_value">Value: %1$d</string>
+    <string name="blur_preview_action">Test on a sample</string>
+    <string name="blur_preview_title">Threshold preview</string>
+    <string name="blur_preview_running">Checking a random sample…</string>
+    <string name="blur_preview_summary">%1$d of %2$d sampled photos flagged at threshold %3$d. Lowest scores first.</string>
+    <string name="blur_preview_empty">Nothing flagged at this threshold. Raise it to catch more.</string>
+    <string name="old_photo_duration">Old photo age</string>
+    <string name="unused_app_duration">Unused app period</string>
+    <string name="min_file_size">Minimum file size</string>
+    <string name="ai_classification">AI photo protection</string>
+    <string name="ai_classification_on">On — keeps blurry photos of people and pets off the delete list</string>
+    <string name="ai_classification_off">Off — faster scan, no protection</string>
+    <string name="auto_scan">Automatic scan</string>
+    <string name="auto_scan_on">On</string>
+    <string name="auto_scan_off">Off</string>
+    <string name="about_app">App</string>
+    <string name="about_version">Version</string>
+    <string name="about_developer">Developer</string>
+    <string name="about_tagline">AI-powered storage management</string>
+
+    <!-- ══ Pro / paywall ══════════════════════════════════════════════ -->
+    <string name="pro_badge">PRO</string>
+    <string name="pro_upgrade_short">Pro</string>
+    <string name="pro_status_active">Pro is active</string>
+    <string name="pro_status_free">Free plan</string>
+    <string name="pro_manage">Manage your subscription</string>
+    <string name="pro_upgrade_hint">Unlock every feature and remove ads</string>
+    <string name="pro_locked_title">This is a Pro feature</string>
+    <string name="pro_locked_treemap">The storage map shows exactly which folders eat your space. Unlock it with Pro.</string>
+    <string name="pro_unlock_button">Unlock Pro</string>
+    <string name="pro_limit_title">Free limit reached</string>
+    <string name="pro_limit_message">The free version deletes up to %1$d items at a time. Go Pro to clean everything in one go.</string>
+
+    <string name="paywall_title">StorageManager Pro</string>
+    <string name="paywall_subtitle">Clean everything at once, with no ads</string>
+    <string name="paywall_benefit_photo_ai">Bulk cleanup of blurry and duplicate photos</string>
+    <string name="paywall_benefit_auto_scan">Automatic background scanning</string>
+    <string name="paywall_benefit_large_files">Unlimited large file hunter</string>
+    <string name="paywall_benefit_treemap">Visual storage map</string>
+    <string name="paywall_benefit_no_ads">No ads</string>
+    <string name="paywall_plan_monthly">Monthly</string>
+    <string name="paywall_plan_yearly">Yearly</string>
+    <string name="paywall_plan_lifetime">Lifetime</string>
+    <string name="paywall_best_value">Best value</string>
+    <string name="paywall_continue">Continue</string>
+    <string name="paywall_restore">Restore purchases</string>
+    <string name="paywall_watch_ad">Watch an ad for 24h access</string>
+    <string name="paywall_watch_ad_desc">Try Pro features free for one day</string>
+    <string name="paywall_already_pro">You already have Pro. Thank you!</string>
+    <string name="paywall_price_unavailable">Prices are unavailable right now. Check your connection and try again.</string>
+    <string name="paywall_purchase_success">Pro unlocked. Enjoy!</string>
+    <string name="paywall_purchase_pending">Your purchase is pending approval.</string>
+    <string name="paywall_purchase_cancelled">Purchase cancelled.</string>
+    <string name="paywall_purchase_failed">Purchase could not be completed.</string>
+    <string name="paywall_reward_granted">Pro features unlocked for 24 hours.</string>
+    <string name="paywall_terms_note">Subscriptions renew automatically and can be cancelled any time from Google Play.</string>
+
+    <!-- ══ Reklam ═════════════════════════════════════════════════════ -->
+    <string name="ad_label">Ad</string>
+
+    <!-- ══ Silme onayı ════════════════════════════════════════════════ -->
+    <string name="confirm_delete_title">Confirm deletion</string>
+    <string name="confirm_delete_message">Delete %1$d selected items? This cannot be undone.</string>
+    <string name="delete_success">%1$d items deleted</string>
+    <string name="delete_selected">Delete selection</string>
+
 </resources>

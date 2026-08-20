@@ -1,0 +1,12 @@
+Trova ed elimina i file inutili con un\'analisi basata sull\'IA
+
+✓ Trova foto sfocate e doppioni
+✓ File grandi — Oltre 50 MB
+✓ App — Inutilizzate
+✓ Cache delle app — Pulisci in sicurezza
+✓ Documenti doppi e download
+✓ Cartelle vuote, log e file temporanei
+✓ Mappa dello spazio
+✓ Cestino
+
+Ti verrà chiesto il permesso di leggere foto e file. Nessun dato lascia il tuo dispositivo.

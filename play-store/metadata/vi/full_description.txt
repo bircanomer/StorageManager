@@ -1,0 +1,12 @@
+Tìm và xoá tệp thừa bằng phân tích hỗ trợ AI
+
+✓ Tìm ảnh mờ và ảnh trùng
+✓ Tệp lớn — Trên 50 MB
+✓ Ứng dụng — Không dùng
+✓ Bộ nhớ đệm ứng dụng — Dọn an toàn
+✓ Tài liệu trùng và tệp tải xuống
+✓ Thư mục rỗng, nhật ký và tệp tạm
+✓ Bản đồ bộ nhớ
+✓ Thùng rác
+
+Ứng dụng sẽ xin quyền đọc ảnh và tệp của bạn. Không dữ liệu nào rời khỏi thiết bị.

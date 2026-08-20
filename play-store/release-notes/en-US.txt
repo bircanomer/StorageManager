@@ -1,0 +1,1 @@
+The app now speaks 73 languages, with the store listing available in every language Google Play supports. Every screen — scan results, photo analysis, storage map and settings — is fully translated, and you can pick your language under Settings › Language.

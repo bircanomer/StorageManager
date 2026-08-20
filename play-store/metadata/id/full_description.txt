@@ -1,0 +1,12 @@
+Temukan dan hapus berkas tak berguna dengan analisis bertenaga AI
+
+✓ Temukan foto buram dan ganda
+✓ Berkas besar — Di atas 50 MB
+✓ Aplikasi — Tak terpakai
+✓ Cache aplikasi — Bersihkan dengan aman
+✓ Dokumen ganda dan unduhan
+✓ Folder kosong, log, dan berkas sementara
+✓ Peta penyimpanan
+✓ Sampah
+
+Kamu akan dimintai izin membaca foto dan berkas. Tidak ada data yang keluar dari perangkat.

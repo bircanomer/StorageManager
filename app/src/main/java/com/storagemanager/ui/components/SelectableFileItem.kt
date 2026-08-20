@@ -1,4 +1,3 @@
-@file:Suppress("DEPRECATION")
 package com.storagemanager.ui.components
 
 import androidx.compose.animation.animateColorAsState
@@ -17,7 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.InsertDriveFile
+import androidx.compose.material.icons.automirrored.outlined.InsertDriveFile
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
@@ -31,11 +30,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.storagemanager.ui.theme.*
+import com.storagemanager.R
 
 /**
  * A selectable file/photo list item with optional thumbnail,
@@ -58,11 +61,18 @@ fun SelectableFileItem(
         label = "select_bg"
     )
 
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val selectedLabel = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.selected)
+    val unselectedLabel = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.not_selected)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .semantics(mergeDescendants = true) {
+                stateDescription = if (isSelected) selectedLabel else unselectedLabel
+            }
             .background(bgColor, shape = RoundedCornerShape(12.dp))
-            .clickable { onToggleSelect() }
+            .clickable(role = Role.Checkbox) { onToggleSelect() }
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -72,7 +82,7 @@ fun SelectableFileItem(
             onCheckedChange = { onToggleSelect() },
             colors = CheckboxDefaults.colors(
                 checkedColor = Primary,
-                uncheckedColor = OnSurface.copy(alpha = 0.4f),
+                uncheckedColor = OnSurface.copy(alpha = 0.6f),
                 checkmarkColor = OnPrimary
             )
         )
@@ -96,7 +106,7 @@ fun SelectableFileItem(
                 )
             } else {
                 Icon(
-                    imageVector = Icons.Outlined.InsertDriveFile,
+                    imageVector = Icons.AutoMirrored.Outlined.InsertDriveFile,
                     contentDescription = null,
                     tint = OnSurface.copy(alpha = 0.5f),
                     modifier = Modifier.size(24.dp)
@@ -126,9 +136,9 @@ fun SelectableFileItem(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = formatRelativeTime(dateModified),
+                    text = formatRelativeTime(context, dateModified),
                     style = MaterialTheme.typography.labelSmall,
-                    color = OnSurface.copy(alpha = 0.45f)
+                    color = OnSurface.copy(alpha = 0.6f)
                 )
             }
         }
@@ -137,7 +147,7 @@ fun SelectableFileItem(
         IconButton(onClick = onDelete) {
             Icon(
                 imageVector = Icons.Outlined.Delete,
-                contentDescription = "Sil",
+                contentDescription = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.delete),
                 tint = Error.copy(alpha = 0.7f),
                 modifier = Modifier.size(20.dp)
             )

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.StorageManager" parent="android:Theme.Material.NoActionBar">
+    <!--
+        AppCompat tabanlı tema: uygulama içi dil seçicinin (AppCompatDelegate.setApplicationLocales)
+        Android 13 öncesi sürümlerde de çalışabilmesi için gereklidir.
+        Arayüzün tamamı Compose ile çizildiğinden bu tema yalnızca pencere ayarlarını belirler.
+    -->
+    <style name="Theme.StorageManager" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>

@@ -1,0 +1,4 @@
+Manager inteligent de stocare
+Găsește pozele neclare și duplicate
+Fișiere și videoclipuri peste 50 MB
+Harta stocării

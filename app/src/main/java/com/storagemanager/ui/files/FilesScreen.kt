@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,7 +27,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
+import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.AudioFile
@@ -35,9 +36,15 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.VideoFile
 import androidx.compose.material.icons.outlined.Circle
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImage
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -54,7 +61,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -75,6 +82,14 @@ import com.storagemanager.domain.model.LargeFile
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.storagemanager.ui.components.MediaItemPreview
+import com.storagemanager.ui.components.MediaPreviewDialog
+import androidx.compose.ui.res.stringResource
+import com.storagemanager.R
+import com.storagemanager.ui.pro.ProViewModel
+import com.storagemanager.ui.components.formatFileSize
+import com.storagemanager.ui.components.StorageAccessBanner
+import com.storagemanager.ui.components.openFileSafely
 
 // ── Renk Paleti ──────────────────────────────────────────────────────────────
 private val DarkBackground = Color(0xFF0D0D1A)
@@ -86,27 +101,25 @@ private val OnSurfaceColor = Color(0xFFC8C8D8)
 private val ErrorColor = Color(0xFFFF6B6B)
 private val SuccessColor = Color(0xFF4CAF50)
 
-private fun formatFileSize(bytes: Long): String {
-    if (bytes <= 0) return "0 B"
-    val units = arrayOf("B", "KB", "MB", "GB", "TB")
-    val digitGroups = (Math.log10(bytes.toDouble()) / Math.log10(1024.0)).toInt()
-    return String.format("%.1f %s", bytes / Math.pow(1024.0, digitGroups.toDouble()), units[digitGroups])
-}
 
-private fun formatDate(timestamp: Long): String {
-    val sdf = SimpleDateFormat("dd MMM yyyy", Locale("tr"))
-    return sdf.format(Date(timestamp))
+private fun formatDate(context: android.content.Context, timestamp: Long): String {
+    return try {
+        val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        sdf.format(Date(timestamp))
+    } catch (e: Exception) {
+        context.getString(R.string.unknown_date)
+    }
 }
 
 private fun getFileIcon(mimeType: String?): ImageVector {
     return when {
-        mimeType == null -> Icons.AutoMirrored.Filled.InsertDriveFile
+        mimeType == null -> Icons.AutoMirrored.Filled.Article
         mimeType.startsWith("image/") -> Icons.Default.Image
         mimeType.startsWith("video/") -> Icons.Default.VideoFile
         mimeType.startsWith("audio/") -> Icons.Default.AudioFile
         mimeType.contains("pdf") || mimeType.contains("document") || mimeType.contains("text") -> Icons.Default.Description
         mimeType.contains("zip") || mimeType.contains("rar") || mimeType.contains("tar") || mimeType.contains("archive") -> Icons.Default.Archive
-        else -> Icons.AutoMirrored.Filled.InsertDriveFile
+        else -> Icons.AutoMirrored.Filled.Article
     }
 }
 
@@ -122,21 +135,65 @@ private fun getFileIconColor(mimeType: String?): Color {
     }
 }
 
+private fun isFileInCategory(file: LargeFile, category: FileCategoryFilter): Boolean {
+    val mime = file.mimeType?.lowercase(Locale.ROOT) ?: ""
+    val name = file.name.lowercase(Locale.ROOT)
+    return when (category) {
+        FileCategoryFilter.ALL -> true
+        FileCategoryFilter.VIDEO -> mime.startsWith("video/") ||
+                name.endsWith(".mp4") || name.endsWith(".mkv") || name.endsWith(".avi") ||
+                name.endsWith(".mov") || name.endsWith(".3gp") || name.endsWith(".webm")
+        FileCategoryFilter.IMAGE -> mime.startsWith("image/") ||
+                name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png") ||
+                name.endsWith(".webp") || name.endsWith(".heic") || name.endsWith(".gif")
+        FileCategoryFilter.AUDIO -> mime.startsWith("audio/") ||
+                name.endsWith(".mp3") || name.endsWith(".wav") || name.endsWith(".ogg") ||
+                name.endsWith(".m4a") || name.endsWith(".flac") || name.endsWith(".aac")
+        FileCategoryFilter.DOCS -> mime.contains("pdf") || mime.contains("document") || mime.contains("text") ||
+                name.endsWith(".pdf") || name.endsWith(".doc") || name.endsWith(".docx") ||
+                name.endsWith(".txt") || name.endsWith(".xls") || name.endsWith(".xlsx") ||
+                name.endsWith(".ppt") || name.endsWith(".pptx")
+        FileCategoryFilter.OTHER -> !isFileInCategory(file, FileCategoryFilter.VIDEO) &&
+                !isFileInCategory(file, FileCategoryFilter.IMAGE) &&
+                !isFileInCategory(file, FileCategoryFilter.AUDIO) &&
+                !isFileInCategory(file, FileCategoryFilter.DOCS)
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilesScreen(
     navController: NavController,
-    viewModel: FilesViewModel = hiltViewModel()
+    viewModel: FilesViewModel = hiltViewModel(),
+    proViewModel: ProViewModel = hiltViewModel()
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showProLimitDialog by remember { mutableStateOf(false) }
+    val isPro by proViewModel.isPro.collectAsStateWithLifecycle()
     var showSortMenu by remember { mutableStateOf(false) }
+    var previewIndex by remember { mutableStateOf<Int?>(null) }
 
+    val filteredFiles = remember(state.largeFiles, state.selectedCategory, state.minSizeMB) {
+        val minBytes = state.minSizeMB.toLong() * 1024L * 1024L
+        state.largeFiles.filter { isFileInCategory(it, state.selectedCategory) && it.size >= minBytes }
+    }
+    val mediaFiles = remember(filteredFiles) {
+        filteredFiles.filter { file ->
+            val nameLower = file.name.lowercase(Locale.ROOT)
+            val mimeLower = file.mimeType?.lowercase(Locale.ROOT) ?: ""
+            mimeLower.startsWith("image/") || mimeLower.startsWith("video/") ||
+                    nameLower.endsWith(".jpg") || nameLower.endsWith(".jpeg") || nameLower.endsWith(".png") ||
+                    nameLower.endsWith(".webp") || nameLower.endsWith(".heic") || nameLower.endsWith(".mp4") ||
+                    nameLower.endsWith(".mkv") || nameLower.endsWith(".avi") || nameLower.endsWith(".mov")
+        }
+    }
     val selectedCount = state.selectedPaths.size
     val selectedTotalSize = state.largeFiles
         .filter { it.path in state.selectedPaths }
         .sumOf { it.size }
-    val allTotalSize = state.largeFiles.sumOf { it.size }
+    val filteredTotalSize = filteredFiles.sumOf { it.size }
 
     Scaffold(
         containerColor = DarkBackground,
@@ -144,7 +201,7 @@ fun FilesScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Büyük Dosyalar",
+                        stringResource(R.string.files_title),
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
@@ -153,7 +210,7 @@ fun FilesScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Geri",
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White
                         )
                     }
@@ -163,7 +220,7 @@ fun FilesScreen(
                         IconButton(onClick = { showSortMenu = true }) {
                             Icon(
                                 Icons.AutoMirrored.Filled.Sort,
-                                contentDescription = "Sırala",
+                                contentDescription = stringResource(R.string.sort),
                                 tint = Color.White
                             )
                         }
@@ -173,11 +230,11 @@ fun FilesScreen(
                             modifier = Modifier.background(DarkSurface)
                         ) {
                             val sortOptions = listOf(
-                                SortBy.SIZE_DESC to "Boyut (Büyük → Küçük)",
-                                SortBy.SIZE_ASC to "Boyut (Küçük → Büyük)",
-                                SortBy.DATE_DESC to "Tarih (Yeni → Eski)",
-                                SortBy.DATE_ASC to "Tarih (Eski → Yeni)",
-                                SortBy.NAME_ASC to "İsim (A → Z)"
+                                SortBy.SIZE_DESC to stringResource(R.string.sort_size_desc),
+                                SortBy.SIZE_ASC to stringResource(R.string.sort_size_asc),
+                                SortBy.DATE_DESC to stringResource(R.string.sort_date_desc),
+                                SortBy.DATE_ASC to stringResource(R.string.sort_date_asc),
+                                SortBy.NAME_ASC to stringResource(R.string.sort_name_asc)
                             )
                             sortOptions.forEach { (sortBy, label) ->
                                 DropdownMenuItem(
@@ -208,14 +265,21 @@ fun FilesScreen(
                 exit = fadeOut()
             ) {
                 ExtendedFloatingActionButton(
-                    onClick = { showDeleteDialog = true },
+                    onClick = {
+                        if (!isPro && selectedCount > ProViewModel.FREE_BULK_LIMIT) {
+                            showProLimitDialog = true
+                        } else {
+                            showDeleteDialog = true
+                        }
+                    },
+                    modifier = Modifier.navigationBarsPadding(),
                     containerColor = ErrorColor,
                     contentColor = Color.White,
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Icon(Icons.Default.Delete, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("$selectedCount Dosya Sil (${formatFileSize(selectedTotalSize)})")
+                    Text(stringResource(R.string.files_delete_count, selectedCount, formatFileSize(selectedTotalSize)))
                 }
             }
         }
@@ -225,9 +289,32 @@ fun FilesScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            // ── Kategori Filtre Çipleri ─────────────────────────────────
+            LazyRow(
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(FileCategoryFilter.entries.toTypedArray()) { cat ->
+                    FilterChip(
+                        selected = state.selectedCategory == cat,
+                        onClick = { viewModel.setCategoryFilter(cat) },
+                        label = {
+                            Text(stringResource(cat.labelRes), fontSize = 13.sp)
+                        },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = SecondaryColor,
+                            selectedLabelColor = Color.White,
+                            containerColor = DarkSurfaceVariant,
+                            labelColor = OnSurfaceColor
+                        ),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                }
+            }
+
             // ── Boyut Filtre Çipleri ─────────────────────────────────────
             LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val sizeFilters = listOf(10, 50, 100, 500)
@@ -236,7 +323,7 @@ fun FilesScreen(
                         selected = state.minSizeMB == mb,
                         onClick = { viewModel.setMinSize(mb) },
                         label = {
-                            Text("${mb} MB+", fontSize = 13.sp)
+                            Text(stringResource(R.string.files_min_size_chip, mb), fontSize = 13.sp)
                         },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = PrimaryColor,
@@ -261,16 +348,18 @@ fun FilesScreen(
                             )
                         )
                     )
-                    .padding(horizontal = 16.dp, vertical = 10.dp),
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "${state.largeFiles.size} dosya • ${formatFileSize(allTotalSize)} toplam",
+                    stringResource(R.string.files_summary_total, filteredFiles.size, formatFileSize(filteredTotalSize)),
                     color = OnSurfaceColor,
                     fontSize = 13.sp
                 )
             }
+
+            StorageAccessBanner(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
 
             // ── İçerik ──────────────────────────────────────────────────
             when {
@@ -308,7 +397,7 @@ fun FilesScreen(
                     }
                 }
 
-                state.largeFiles.isEmpty() -> {
+                filteredFiles.isEmpty() -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -322,14 +411,14 @@ fun FilesScreen(
                             )
                             Spacer(Modifier.height(16.dp))
                             Text(
-                                "Büyük dosya bulunamadı",
+                                if (state.largeFiles.isEmpty()) stringResource(R.string.files_empty) else stringResource(R.string.files_empty_category),
                                 color = OnSurfaceColor.copy(alpha = 0.5f),
                                 fontSize = 16.sp,
                                 textAlign = TextAlign.Center
                             )
                             Spacer(Modifier.height(8.dp))
                             Text(
-                                "${state.minSizeMB} MB üzerinde dosya yok 👍",
+                                if (state.largeFiles.isEmpty()) stringResource(R.string.files_empty_hint, state.minSizeMB) else stringResource(R.string.files_empty_category_hint, state.minSizeMB, stringResource(state.selectedCategory.labelRes)),
                                 color = SuccessColor.copy(alpha = 0.7f),
                                 fontSize = 13.sp,
                                 textAlign = TextAlign.Center
@@ -350,14 +439,40 @@ fun FilesScreen(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         itemsIndexed(
-                            items = state.largeFiles,
+                            items = filteredFiles,
                             key = { _, file -> file.path }
                         ) { index, file ->
+                            val nameLower = file.name.lowercase(Locale.ROOT)
+                            val mimeLower = file.mimeType?.lowercase(Locale.ROOT) ?: ""
+                            val isMedia = mimeLower.startsWith("image/") || mimeLower.startsWith("video/") ||
+                                    nameLower.endsWith(".jpg") || nameLower.endsWith(".jpeg") || nameLower.endsWith(".png") ||
+                                    nameLower.endsWith(".webp") || nameLower.endsWith(".heic") || nameLower.endsWith(".mp4") ||
+                                    nameLower.endsWith(".mkv") || nameLower.endsWith(".avi") || nameLower.endsWith(".mov")
+
                             FileListItem(
                                 file = file,
                                 isSelected = file.path in state.selectedPaths,
                                 isAlternate = index % 2 == 1,
-                                onClick = { viewModel.toggleSelection(file.path) }
+                                isMedia = isMedia,
+                                onClick = {
+                                    if (isMedia) {
+                                        val mediaIndex = mediaFiles.indexOf(file)
+                                        if (mediaIndex != -1) {
+                                            previewIndex = mediaIndex
+                                        }
+                                    } else {
+                                        openFileSafely(context, file.path, file.mimeType)
+                                    }
+                                },
+                                onToggleSelect = { viewModel.toggleSelection(file.path) },
+                                onPreview = if (isMedia) {
+                                    {
+                                        val mediaIndex = mediaFiles.indexOf(file)
+                                        if (mediaIndex != -1) {
+                                            previewIndex = mediaIndex
+                                        }
+                                    }
+                                } else null
                             )
                         }
                     }
@@ -367,6 +482,17 @@ fun FilesScreen(
     }
 
     // ── Silme Onay Dialogu ───────────────────────────────────────────────────
+    if (showProLimitDialog) {
+        com.storagemanager.ui.pro.ProLimitDialog(
+            limit = ProViewModel.FREE_BULK_LIMIT,
+            onUnlock = {
+                showProLimitDialog = false
+                navController.navigate(com.storagemanager.ui.navigation.Screen.Paywall.route)
+            },
+            onDismiss = { showProLimitDialog = false }
+        )
+    }
+
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
@@ -374,11 +500,11 @@ fun FilesScreen(
             titleContentColor = Color.White,
             textContentColor = OnSurfaceColor,
             title = {
-                Text("Dosyaları Sil", fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.files_delete_title), fontWeight = FontWeight.Bold)
             },
             text = {
                 Text(
-                    "$selectedCount dosya silinecek ve ${formatFileSize(selectedTotalSize)} alan boşaltılacak.\n\nBu işlem geri alınamaz!",
+                    stringResource(R.string.files_delete_message, selectedCount, formatFileSize(selectedTotalSize)),
                     lineHeight = 22.sp
                 )
             },
@@ -389,15 +515,79 @@ fun FilesScreen(
                         showDeleteDialog = false
                     }
                 ) {
-                    Text("Sil", color = ErrorColor, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.delete), color = ErrorColor, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("İptal", color = OnSurfaceColor)
+                    Text(stringResource(R.string.cancel), color = OnSurfaceColor)
                 }
             }
         )
+    }
+
+    // ── Silme İlerleme Dialogu ───────────────────────────────────────────────
+    if (state.isDeleting) {
+        AlertDialog(
+            onDismissRequest = { /* Silme sırasında kapatılamaz */ },
+            containerColor = DarkSurface,
+            title = {
+                Text(
+                    stringResource(R.string.files_deleting_short),
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(32.dp),
+                        color = PrimaryColor,
+                        strokeWidth = 3.dp
+                    )
+                    Text(
+                        stringResource(R.string.files_deleting),
+                        color = OnSurfaceColor,
+                        fontSize = 14.sp
+                    )
+                }
+            },
+            confirmButton = {}
+        )
+    }
+
+    // ── Medya Önizleme Dialogu ────────────────────────────────────────────────
+    previewIndex?.let { index ->
+        if (index in mediaFiles.indices) {
+            val file = mediaFiles[index]
+            val nameLower = file.name.lowercase(Locale.ROOT)
+            val mimeLower = file.mimeType?.lowercase(Locale.ROOT) ?: ""
+            val isVideo = mimeLower.startsWith("video/") ||
+                    nameLower.endsWith(".mp4") || nameLower.endsWith(".mkv") || nameLower.endsWith(".avi") ||
+                    nameLower.endsWith(".mov") || nameLower.endsWith(".3gp") || nameLower.endsWith(".webm")
+
+            MediaPreviewDialog(
+                item = MediaItemPreview(
+                    uriOrPath = file.path,
+                    title = file.name,
+                    subtitle = stringResource(R.string.meta_separator, formatFileSize(file.size), formatDate(LocalContext.current, file.lastModified)),
+                    isVideo = isVideo,
+                    isSelected = file.path in state.selectedPaths,
+                    onToggleSelect = { viewModel.toggleSelection(file.path) },
+                    onDelete = {
+                        val pathToDelete = file.path
+                        previewIndex = null
+                        viewModel.deleteSingleFile(pathToDelete)
+                    }
+                ),
+                onDismiss = { previewIndex = null },
+                onPrevious = if (index > 0) { { previewIndex = index - 1 } } else null,
+                onNext = if (index < mediaFiles.size - 1) { { previewIndex = index + 1 } } else null
+            )
+        }
     }
 }
 
@@ -406,7 +596,10 @@ private fun FileListItem(
     file: LargeFile,
     isSelected: Boolean,
     isAlternate: Boolean,
-    onClick: () -> Unit
+    isMedia: Boolean,
+    onClick: () -> Unit,
+    onToggleSelect: () -> Unit,
+    onPreview: (() -> Unit)? = null
 ) {
     val bgColor = when {
         isSelected -> PrimaryColor.copy(alpha = 0.15f)
@@ -431,31 +624,64 @@ private fun FileListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Seçim göstergesi
-            Icon(
-                imageVector = if (isSelected) Icons.Filled.CheckCircle else Icons.Outlined.Circle,
-                contentDescription = null,
-                tint = if (isSelected) PrimaryColor else OnSurfaceColor.copy(alpha = 0.4f),
-                modifier = Modifier.size(22.dp)
-            )
+            Box(
+                modifier = Modifier.clickable { onToggleSelect() }
+            ) {
+                Icon(
+                    imageVector = if (isSelected) Icons.Filled.CheckCircle else Icons.Outlined.Circle,
+                    contentDescription = null,
+                    tint = if (isSelected) PrimaryColor else OnSurfaceColor.copy(alpha = 0.4f),
+                    modifier = Modifier.size(22.dp)
+                )
+            }
 
             Spacer(Modifier.width(12.dp))
 
-            // Dosya tipi ikonu
+            // Dosya tipi ikonu veya Medya Önizleme Küçük Resmi (Thumbnail)
             Box(
                 modifier = Modifier
-                    .size(42.dp)
-                    .background(
-                        iconColor.copy(alpha = 0.15f),
-                        shape = RoundedCornerShape(10.dp)
-                    ),
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(iconColor.copy(alpha = 0.15f))
+                    .then(if (onPreview != null) Modifier.clickable { onPreview() } else Modifier),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    getFileIcon(file.mimeType),
-                    contentDescription = null,
-                    tint = iconColor,
-                    modifier = Modifier.size(22.dp)
-                )
+                if (isMedia) {
+                    AsyncImage(
+                        model = java.io.File(file.path),
+                        contentDescription = file.name,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    val mimeLower = file.mimeType?.lowercase(Locale.ROOT) ?: ""
+                    val nameLower = file.name.lowercase(Locale.ROOT)
+                    val isVideo = mimeLower.startsWith("video/") ||
+                            nameLower.endsWith(".mp4") || nameLower.endsWith(".mkv") || nameLower.endsWith(".avi") ||
+                            nameLower.endsWith(".mov") || nameLower.endsWith(".3gp") || nameLower.endsWith(".webm")
+
+                    if (isVideo) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.35f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Default.PlayArrow,
+                                contentDescription = stringResource(R.string.play),
+                                tint = Color.White,
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
+                    }
+                } else {
+                    Icon(
+                        getFileIcon(file.mimeType),
+                        contentDescription = null,
+                        tint = iconColor,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
 
             Spacer(Modifier.width(12.dp))
@@ -470,11 +696,19 @@ private fun FileListItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Spacer(Modifier.height(3.dp))
+                Spacer(Modifier.height(2.dp))
                 Text(
-                    formatDate(file.lastModified),
+                    file.path,
                     color = OnSurfaceColor.copy(alpha = 0.5f),
-                    fontSize = 11.sp
+                    fontSize = 11.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    formatDate(LocalContext.current, file.lastModified),
+                    color = OnSurfaceColor.copy(alpha = 0.35f),
+                    fontSize = 10.sp
                 )
             }
 
@@ -485,7 +719,7 @@ private fun FileListItem(
                 formatFileSize(file.size),
                 color = SecondaryColor,
                 fontWeight = FontWeight.Bold,
-                fontSize = 15.sp
+                fontSize = 14.sp
             )
         }
     }

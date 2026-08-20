@@ -48,15 +48,23 @@ fun StorageDonutChart(
     modifier: Modifier = Modifier
 ) {
     // Build category data list
-    val categories = remember(storageInfo) {
+    val photosLabel = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.category_image)
+    val videosLabel = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.category_video)
+    val appsLabel = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.category_apps)
+    val cacheLabel = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.category_cache)
+    val audioLabel = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.category_audio)
+    val docsLabel = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.category_document)
+    val otherLabel = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.category_other)
+
+    val categories = remember(storageInfo, photosLabel) {
         listOf(
-            CategoryData("Fotoğraflar", storageInfo.photosSize, PhotoColor),
-            CategoryData("Videolar", storageInfo.videosSize, VideoColor),
-            CategoryData("Uygulamalar", storageInfo.appsSize, AppColor),
-            CategoryData("Önbellek", storageInfo.cacheSize, CacheColor),
-            CategoryData("Ses", storageInfo.audioSize, AudioColor),
-            CategoryData("Belgeler", storageInfo.documentsSize, DocColor),
-            CategoryData("Diğer", storageInfo.otherSize, OtherColor)
+            CategoryData(photosLabel, storageInfo.photosSize, PhotoColor),
+            CategoryData(videosLabel, storageInfo.videosSize, VideoColor),
+            CategoryData(appsLabel, storageInfo.appsSize, AppColor),
+            CategoryData(cacheLabel, storageInfo.cacheSize, CacheColor),
+            CategoryData(audioLabel, storageInfo.audioSize, AudioColor),
+            CategoryData(docsLabel, storageInfo.documentsSize, DocColor),
+            CategoryData(otherLabel, storageInfo.otherSize, OtherColor)
         ).filter { it.size > 0 }
     }
 
@@ -75,6 +83,14 @@ fun StorageDonutChart(
             targetValue = 1f,
             animationSpec = tween(durationMillis = 1200, easing = FastOutSlowInEasing)
         )
+    }
+
+    val freePercentage = remember(storageInfo) {
+        if (storageInfo.totalSpace > 0) {
+            (storageInfo.freeSpace.toFloat() / storageInfo.totalSpace.toFloat()) * 100f
+        } else {
+            0f
+        }
     }
 
     Column(
@@ -119,6 +135,17 @@ fun StorageDonutChart(
                     style = Stroke(width = strokeWidth + 8.dp.toPx(), cap = StrokeCap.Butt)
                 )
 
+                // Glow cover
+                drawArc(
+                    color = Background,
+                    startAngle = 0f,
+                    sweepAngle = 360f,
+                    useCenter = false,
+                    topLeft = topLeft - Offset(2.dp.toPx(), 2.dp.toPx()),
+                    size = Size(arcSize.width + 4.dp.toPx(), arcSize.height + 4.dp.toPx()),
+                    style = Stroke(width = strokeWidth + 4.dp.toPx(), cap = StrokeCap.Butt)
+                )
+
                 // Segments
                 var startAngle = -90f
                 categories.forEachIndexed { index, category ->
@@ -136,25 +163,39 @@ fun StorageDonutChart(
                 }
             }
 
-            // Center text
+            // Center text (Boş Yer Odaklı)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = formatFileSize(storageInfo.usedSpace),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold
+                    text = androidx.compose.ui.res.stringResource(
+                        com.storagemanager.R.string.free_space_label,
+                        bidiIsolate(String.format(java.util.Locale.getDefault(), "%.1f", freePercentage))
                     ),
-                    color = OnBackground
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Success
                 )
                 Text(
-                    text = "/ ${formatFileSize(storageInfo.totalSpace)}",
-                    style = MaterialTheme.typography.labelMedium,
+                    text = formatFileSize(storageInfo.freeSpace),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.ExtraBold
+                    ),
+                    color = Success
+                )
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = androidx.compose.ui.res.stringResource(
+                        com.storagemanager.R.string.used_of_total,
+                        formatFileSize(storageInfo.usedSpace),
+                        formatFileSize(storageInfo.totalSpace)
+                    ),
+                    style = MaterialTheme.typography.labelSmall,
                     color = OnSurface.copy(alpha = 0.6f),
                     textAlign = TextAlign.Center
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Legend
         FlowRow(
@@ -168,6 +209,39 @@ fun StorageDonutChart(
                     label = category.name,
                     size = formatFileSize(category.size),
                     modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Boş Alan Özet Rozeti
+        Surface(
+            shape = CircleShape,
+            color = Success.copy(alpha = 0.15f),
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = Success,
+                    modifier = Modifier.size(8.dp),
+                    content = {}
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = androidx.compose.ui.res.stringResource(com.storagemanager.R.string.available_space),
+                    fontSize = 13.sp,
+                    color = OnBackground
+                )
+                Text(
+                    text = "${formatFileSize(storageInfo.freeSpace)} (${bidiIsolate(String.format(java.util.Locale.getDefault(), "%.1f", freePercentage))}%)",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Success
                 )
             }
         }

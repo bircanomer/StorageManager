@@ -71,20 +71,6 @@ fun CategoryCard(
             )
             .padding(16.dp)
     ) {
-        // Shimmer overlay
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color.White.copy(alpha = 0.0f),
-                            Color.White.copy(alpha = 0.05f),
-                            Color.White.copy(alpha = 0.0f)
-                        )
-                    )
-                )
-        )
 
         Column {
             Row(
@@ -121,7 +107,10 @@ fun CategoryCard(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = "$itemCount öğe",
+                    text = androidx.compose.ui.res.stringResource(
+                        com.storagemanager.R.string.item_count,
+                        itemCount
+                    ),
                     style = MaterialTheme.typography.labelMedium,
                     color = OnPrimary.copy(alpha = 0.8f)
                 )

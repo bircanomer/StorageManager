@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed icon (Android 13+). Single color; the system applies its own tint. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Gauge track -->
+    <path
+        android:pathData="M 54,28 A 26,26 0 1 1 53.99,28 Z"
+        android:strokeWidth="9"
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.3" />
+
+    <!-- Gauge progress arc -->
+    <path
+        android:pathData="M 54,28 A 26,26 0 1 1 28.4,58.51"
+        android:strokeWidth="9"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+
+    <!-- Center sparkle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 54,39 C 55.7,47.9 60.1,52.3 69,54 C 60.1,55.7 55.7,60.1 54,69 C 52.3,60.1 47.9,55.7 39,54 C 47.9,52.3 52.3,47.9 54,39 Z" />
+
+    <!-- Sparkle in the ring gap -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 33.5,32 C 34.2,35.8 36.2,37.8 40,38.5 C 36.2,39.2 34.2,41.2 33.5,45 C 32.8,41.2 30.8,39.2 27,38.5 C 30.8,37.8 32.8,35.8 33.5,32 Z" />
+
+</vector>

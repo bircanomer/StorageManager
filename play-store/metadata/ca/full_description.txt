@@ -1,0 +1,12 @@
+Troba i elimina fitxers innecessaris amb anàlisi basada en IA
+
+✓ Troba fotos borroses i duplicades
+✓ Fitxers grans — Més de 50 MB
+✓ Aplicacions — Sense usar
+✓ Memòria cau d\'aplicacions — Buida amb seguretat
+✓ Documents i baixades duplicats
+✓ Carpetes buides, fitxers de registre i temporals
+✓ Mapa d\'emmagatzematge
+✓ Paperera
+
+Se us demanarà permís per llegir les vostres fotos i fitxers. Cap dada surt del vostre dispositiu.

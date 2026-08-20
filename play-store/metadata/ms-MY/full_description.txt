@@ -1,0 +1,12 @@
+Cari dan buang fail yang tidak perlu dengan analisis berkuasa AI
+
+✓ Cari foto kabur dan pendua
+✓ Fail besar — Melebihi 50 MB
+✓ Apl — Tidak digunakan
+✓ Cache apl — Kosongkan dengan selamat
+✓ Dokumen dan muat turun pendua
+✓ Folder kosong, fail log dan sementara
+✓ Peta storan
+✓ Tong sampah
+
+Anda akan diminta kebenaran untuk membaca foto dan fail anda. Tiada data keluar daripada peranti anda.

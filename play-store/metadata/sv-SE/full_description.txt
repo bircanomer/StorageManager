@@ -1,0 +1,12 @@
+Hitta och ta bort skräpfiler med AI-driven analys
+
+✓ Hitta suddiga och dubbla foton
+✓ Stora filer — Över 50 MB
+✓ Appar — Oanvända
+✓ Appcacher — Rensa säkert
+✓ Dubbla dokument och nedladdningar
+✓ Tomma mappar, logg- och temp-filer
+✓ Lagringskarta
+✓ Papperskorg
+
+Du får en fråga om behörighet att läsa dina foton och filer. Ingen data lämnar din enhet.

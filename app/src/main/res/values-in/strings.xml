@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Bahasa Indonesia.
+    Klasör adı bilerek "values-in": Android'in Endonezce için kullandığı eski dil kodu budur
+    ve locales_config.xml içindeki "id" etiketi çalışma zamanında buraya çözümlenir.
+-->
+<resources>
+    <string name="ok">OK</string>
+    <string name="cancel">Batal</string>
+    <string name="back">Kembali</string>
+    <string name="close">Tutup</string>
+    <string name="select_all">Pilih semua</string>
+    <string name="deselect_all">Hapus pilihan</string>
+    <string name="delete">Hapus</string>
+    <string name="open">Buka</string>
+    <string name="sort">Urutkan</string>
+    <string name="selected">Dipilih</string>
+    <string name="not_selected">Tidak dipilih</string>
+    <string name="please_wait">Mohon tunggu</string>
+    <string name="unknown_error">Terjadi kesalahan</string>
+    <string name="days_format">%1$d hari</string>
+    <string name="mb_format">%1$d MB</string>
+    <string name="item_count">%1$d item</string>
+    <string name="tap_to_open">Ketuk untuk membuka</string>
+    <string name="rescan">Pindai ulang</string>
+    <string name="retry">Coba lagi</string>
+    <string name="error_with_message">Kesalahan: %1$s</string>
+    <string name="percent_format">%1$d %%</string>
+    <string name="meta_separator">%1$s • %2$s</string>
+    <string name="clear">Bersihkan</string>
+    <string name="scan_scope_icon">Cakupan pemindaian</string>
+    <string name="dashboard_categories">Kategori</string>
+    <string name="sort_date_desc">Tanggal (baru → lama)</string>
+    <string name="sort_date_asc">Tanggal (lama → baru)</string>
+    <string name="photos_group_short">Grup %1$d</string>
+    <string name="junk_all_clean">Sistem kamu benar-benar bersih! ✨</string>
+
+    <string name="time_never_used">tidak pernah dipakai</string>
+    <string name="time_just_now">baru saja</string>
+    <string name="time_minutes_ago">%1$d menit lalu</string>
+    <string name="time_hours_ago">%1$d jam lalu</string>
+    <string name="time_yesterday">kemarin</string>
+    <string name="time_days_ago">%1$d hari lalu</string>
+    <string name="time_weeks_ago">%1$d minggu lalu</string>
+    <string name="time_months_ago">%1$d bulan lalu</string>
+    <string name="time_years_ago">%1$d tahun lalu</string>
+
+    <string name="sort_size_desc">Ukuran (besar → kecil)</string>
+    <string name="sort_size_asc">Ukuran (kecil → besar)</string>
+    <string name="sort_name_asc">Nama (A → Z)</string>
+    <string name="sort_app_name_asc">Nama aplikasi (A → Z)</string>
+    <string name="sort_unused_first">Yang tak pernah dipakai dulu</string>
+
+    <string name="onboarding_title">Bersihkan ponselmu</string>
+    <string name="onboarding_subtitle">Temukan dan hapus berkas tak berguna dengan analisis bertenaga AI</string>
+    <string name="onboarding_feature_photos">Temukan foto buram dan ganda</string>
+    <string name="onboarding_feature_apps">Kenali aplikasi yang tak pernah dibuka</string>
+    <string name="onboarding_feature_cache">Bersihkan cache dengan aman</string>
+    <string name="onboarding_feature_files">Temukan berkas berukuran besar</string>
+    <string name="onboarding_privacy_note">Kamu akan dimintai izin membaca foto dan berkas. Tidak ada data yang keluar dari perangkat.</string>
+    <string name="onboarding_permissions_note">Izin lanjutan (statistik penggunaan, akses semua berkas) bisa kamu berikan kapan saja lewat Setelan.</string>
+    <string name="get_started">Mulai</string>
+
+    <string name="dashboard_title">Pengelola penyimpanan cerdas</string>
+    <string name="scan_button">Mulai pindai cerdas</string>
+    <string name="scanning">Memindai…</string>
+    <string name="scan_preparing">Menyiapkan…</string>
+    <string name="scan_customize">Atur cakupan (%1$d kategori)</string>
+    <string name="scan_scope_title">Pilih cakupan pemindaian</string>
+    <string name="scan_scope_hint">Centang bagian yang ingin dipindai:</string>
+    <string name="scan_selected_categories">Pindai pilihan (%1$d kategori)</string>
+    <string name="free_space_label">Ruang kosong (%1$s %%)</string>
+    <string name="used_of_total">%1$s / %2$s terpakai</string>
+    <string name="available_space">Ruang tersedia: </string>
+    <string name="trash_title">Sampah</string>
+    <string name="treemap_title">Peta penyimpanan</string>
+
+    <string name="card_photos_subtitle">Buram &amp; ganda</string>
+    <string name="card_apps_subtitle">Tak terpakai</string>
+    <string name="card_cache_subtitle">Bersihkan dengan aman</string>
+    <string name="card_large_files_subtitle">Di atas 50 MB</string>
+    <string name="card_downloads_subtitle">Dokumen ganda</string>
+    <string name="card_system_junk_subtitle">Folder kosong &amp; log</string>
+
+    <string name="category_photos">Foto</string>
+    <string name="category_photos_desc">Buram, ganda, dan tangkapan layar</string>
+    <string name="category_unused_apps">Aplikasi tak terpakai</string>
+    <string name="category_unused_apps_desc">Aplikasi yang lama tak kamu buka</string>
+    <string name="category_cache">Cache aplikasi</string>
+    <string name="category_cache_desc">Data sementara aplikasi</string>
+    <string name="category_large_files">Berkas besar</string>
+    <string name="category_large_files_desc">Berkas dan video di atas 50 MB</string>
+    <string name="category_downloads">Unduhan &amp; dokumen</string>
+    <string name="category_downloads_desc">Dokumen ganda dan unduhan</string>
+    <string name="category_system_junk">Sampah sistem</string>
+    <string name="category_system_junk_desc">Folder kosong, log, dan berkas sementara</string>
+    <string name="category_apps">Aplikasi</string>
+    <string name="category_other">Lainnya</string>
+    <string name="category_all">Semua</string>
+    <string name="category_video">Video</string>
+    <string name="category_image">Foto</string>
+    <string name="category_audio">Musik / audio</string>
+    <string name="category_document">Dokumen</string>
+
+    <string name="photos_title">Analisis foto</string>
+    <string name="junk_type_blurry">Foto buram</string>
+    <string name="junk_type_duplicate">Foto ganda</string>
+    <string name="junk_type_screenshot">Tangkapan layar</string>
+    <string name="junk_type_old">Foto lama</string>
+    <string name="tab_blurry">Buram</string>
+    <string name="tab_duplicate">Ganda</string>
+    <string name="tab_screenshot">Layar</string>
+    <string name="tab_old">Lama</string>
+    <string name="photos_blurry_desc">Foto yang terdeteksi tidak fokus atau berkualitas rendah oleh analisis di perangkat.</string>
+    <string name="photos_duplicate_desc">Foto yang muncul lebih dari sekali di perangkatmu, identik atau hampir identik.</string>
+    <string name="photos_screenshot_desc">Tangkapan layar dari folder screenshot atau yang cocok dengan resolusi layarmu.</string>
+    <string name="photos_old_desc">Foto yang lebih lama dari periode pilihanmu (bisa diubah di Setelan).</string>
+    <string name="photos_analyzing">Menganalisis foto…</string>
+    <string name="photos_empty_category">Tidak ada foto di kategori ini</string>
+    <string name="photos_all_clean">Semua fotomu terlihat rapi! 🎉</string>
+    <string name="photos_summary">%1$d foto • %2$s</string>
+    <string name="photos_select_duplicates">Pilih salinan</string>
+    <string name="photos_group_title">Grup foto %1$d (%2$d item)</string>
+    <string name="photos_delete_count">Hapus %1$d foto</string>
+    <string name="photos_delete_title">Hapus foto</string>
+    <string name="photos_delete_message">%1$d foto akan dihapus dan %2$s dibebaskan.\n\nTindakan ini tidak bisa dibatalkan.</string>
+    <string name="photos_deleting">Menghapus foto, mohon tunggu…</string>
+
+    <string name="apps_title">Aplikasi tak terpakai</string>
+    <string name="apps_summary">%1$d aplikasi • memakai %2$s</string>
+    <string name="apps_empty">Tidak ada aplikasi tak terpakai</string>
+    <string name="apps_reset_filter">Pindai ulang / atur ulang filter</string>
+    <string name="apps_uninstall">Copot</string>
+    <string name="apps_uninstall_selected">Copot pilihan</string>
+    <string name="apps_uninstall_selected_count">Copot %1$d pilihan</string>
+    <string name="apps_size_with_cache">%1$s + %2$s cache</string>
+    <string name="apps_never_used_tap">Tak pernah dipakai • ketuk untuk membuka</string>
+    <string name="apps_last_used_tap">Dipakai %1$d hari lalu • ketuk untuk membuka</string>
+    <string name="apps_open_app">Buka aplikasi</string>
+    <string name="apps_days_short">%1$d h</string>
+
+    <string name="cache_title">Pengelola cache</string>
+    <string name="cache_loading">Memuat detail cache…</string>
+    <string name="cache_clean_state">Cache sudah bersih! 🎉</string>
+    <string name="cache_nothing_found">Tidak ada cache untuk dibersihkan</string>
+    <string name="cache_total">Total cache</string>
+    <string name="cache_explanation">Cache adalah data sementara yang disimpan aplikasi agar terbuka lebih cepat. Membersihkannya aman dan membebaskan ruang.</string>
+    <string name="cache_clear_all">Bersihkan semua cache</string>
+    <string name="cache_android_note">ℹ️ Android tidak mengizinkan aplikasi membersihkan cache aplikasi lain. Tombol di atas membawamu ke setelan penyimpanan.</string>
+    <string name="cache_open_app_info">Buka info aplikasi</string>
+
+    <string name="files_title">Berkas besar</string>
+    <string name="files_empty">Tidak ada berkas besar</string>
+    <string name="files_empty_category">Tidak ada berkas di kategori ini</string>
+    <string name="files_empty_hint">Tidak ada yang di atas %1$d MB 👍</string>
+    <string name="files_empty_category_hint">Tidak ada berkas di atas %1$d MB pada %2$s</string>
+    <string name="files_delete_title">Hapus berkas</string>
+    <string name="files_delete_message">%1$d berkas akan dihapus dan %2$s dibebaskan.\n\nTindakan ini tidak bisa dibatalkan.</string>
+    <string name="files_deleting">Menghapus berkas, mohon tunggu…</string>
+    <string name="files_deleting_short">Menghapus…</string>
+    <string name="files_delete_count">Hapus %1$d berkas (%2$s)</string>
+    <string name="files_min_size_chip">%1$d MB+</string>
+    <string name="unknown_date">Tanggal tak diketahui</string>
+    <string name="play">Putar</string>
+    <string name="apps_analyzing">Menganalisis aplikasi…</string>
+    <string name="apps_congrats">Kerja bagus! 🎉</string>
+    <string name="downloads_group_title">Grup ganda (%1$d salinan)</string>
+
+    <string name="downloads_title">Dokumen &amp; unduhan</string>
+    <string name="downloads_tab">Unduhan</string>
+    <string name="downloads_duplicates_tab">Ganda</string>
+    <string name="downloads_no_duplicates">Tidak ada dokumen ganda ✨</string>
+    <string name="downloads_no_junk">Tidak ada berkas tak berguna di Unduhan ✨</string>
+    <string name="downloads_summary_title">Ringkasan dokumen ganda</string>
+    <string name="downloads_summary_groups">%1$d berkas dalam %2$d grup.</string>
+    <string name="downloads_summary_cleanable">Salinan yang bisa dihapus: %1$d • bisa dibebaskan: %2$s</string>
+    <string name="downloads_delete_copies">Hapus semua salinan (%1$s)</string>
+    <string name="downloads_delete_title">Hapus semua salinan?</string>
+    <string name="downloads_delete_message">Hapus semua salinan dokumen ganda? Berkas aslimu tetap disimpan.</string>
+    <string name="downloads_move_to_trash">Pindahkan ke sampah</string>
+    <string name="downloads_item_meta">%1$s • ketuk untuk membuka</string>
+    <string name="downloads_item_meta_category">%1$s • %2$s • ketuk untuk membuka</string>
+
+    <string name="junk_title">Folder kosong &amp; sampah sistem</string>
+    <string name="junk_scanning">Memindai folder kosong dan sampah sistem…</string>
+    <string name="junk_cleanable">Sampah sistem yang bisa dibersihkan</string>
+    <string name="junk_clean_all">Bersihkan semua (%1$d item)</string>
+    <string name="junk_empty_folder">Folder kosong</string>
+    <string name="junk_log_file">Berkas log</string>
+    <string name="junk_temp_file">Berkas sementara</string>
+    <string name="junk_system_cache">Cache sistem</string>
+
+    <string name="trash_empty_action">Kosongkan</string>
+    <string name="trash_is_empty">Sampah kosong</string>
+    <string name="trash_total">Total di sampah</string>
+    <string name="trash_restore">Pulihkan</string>
+    <string name="trash_delete_forever">Hapus permanen</string>
+
+    <string name="treemap_calculating">Menyusun peta penyimpanan…</string>
+    <string name="treemap_blocks">Peta blok visual</string>
+    <string name="treemap_folder_details">Detail folder</string>
+    <string name="treemap_file_meta">%1$d%% • ketuk untuk membuka</string>
+    <string name="file_open_failed">File ini tidak dapat dibuka</string>
+
+    <string name="total_space">Total ruang</string>
+    <string name="used_space">Terpakai</string>
+    <string name="free_space">Kosong</string>
+    <string name="cleanable_space">Bisa dibersihkan</string>
+
+    <string name="preview_external_player">Pemutar eksternal</string>
+    <string name="preview_previous">Sebelumnya</string>
+    <string name="preview_next">Berikutnya</string>
+    <string name="preview_play">Putar</string>
+    <string name="preview_select">Pilih</string>
+    <string name="preview_delete_this">Hapus berkas ini</string>
+
+    <string name="progress_starting">Memulai pemindaian…</string>
+    <string name="progress_photos_listing">Mendata foto…</string>
+    <string name="progress_photos_grouping">Mengelompokkan foto ganda…</string>
+    <string name="progress_photos_scanning_ai">Memindai foto dengan AI (%1$d%%)…</string>
+    <string name="progress_photos_sharpness">Memeriksa ketajaman (%1$d%%)…</string>
+    <string name="progress_photos_sharpness_ai">Memeriksa ketajaman dengan AI (%1$d%%)…</string>
+    <string name="progress_photos_scanning">Memindai foto (%1$d %%)…</string>
+    <string name="progress_photos_done">Pemindaian foto selesai (%1$d)</string>
+    <string name="progress_apps">Memeriksa aplikasi tak terpakai…</string>
+    <string name="progress_apps_done">Pemindaian aplikasi selesai (%1$d)</string>
+    <string name="progress_cache">Membaca detail cache…</string>
+    <string name="progress_cache_done">Pemindaian cache selesai (%1$d)</string>
+    <string name="progress_large_files">Mencari berkas besar…</string>
+    <string name="progress_large_files_done">Berkas besar selesai (%1$d)</string>
+    <string name="progress_downloads">Memindai dokumen &amp; unduhan…</string>
+    <string name="progress_downloads_done">Unduhan selesai</string>
+    <string name="progress_system_junk">Memindai sampah sistem…</string>
+    <string name="progress_system_junk_done">Sampah sistem selesai (%1$d)</string>
+    <string name="progress_complete">Pemindaian selesai</string>
+
+    <string name="notification_storage_warning_title">Peringatan penyimpanan</string>
+    <string name="notification_storage_warning_message">Penyimpanan perangkatmu terisi %1$d %%. Ketuk untuk membersihkan sekarang.</string>
+
+    <string name="permission_required">Perlu izin</string>
+    <string name="storage_permission_rationale">Izin penyimpanan diperlukan untuk memindai berkasmu.</string>
+    <string name="grant_permission">Beri izin</string>
+    <string name="permission_granted">Diberikan</string>
+    <string name="permission_usage_stats">Akses penggunaan</string>
+    <string name="permission_usage_stats_desc">Diperlukan untuk mengenali aplikasi yang tak pernah dibuka</string>
+    <string name="permission_all_files">Akses semua berkas</string>
+    <string name="permission_all_files_desc">Diperlukan untuk memindai berkas besar dan sampah sistem</string>
+
+    <string name="settings_title">Setelan</string>
+    <string name="section_pro">Pro</string>
+    <string name="section_language">Bahasa</string>
+    <string name="section_scan_settings">Setelan pemindaian</string>
+    <string name="section_general">Umum</string>
+    <string name="section_permissions">Izin</string>
+    <string name="section_about">Tentang</string>
+    <string name="language_title">Bahasa aplikasi</string>
+    <string name="language_system_default">Bawaan sistem</string>
+    <string name="blur_threshold">Ambang keburaman</string>
+    <string name="blur_threshold_value">Nilai: %1$d</string>
+    <string name="blur_preview_action">Uji pada sampel</string>
+    <string name="blur_preview_title">Pratinjau ambang</string>
+    <string name="blur_preview_running">Memeriksa sampel acak…</string>
+    <string name="blur_preview_summary">%1$d dari %2$d foto sampel ditandai pada ambang %3$d. Skor terendah lebih dulu.</string>
+    <string name="blur_preview_empty">Tidak ada yang ditandai pada ambang ini. Naikkan untuk menemukan lebih banyak.</string>
+    <string name="old_photo_duration">Usia foto lama</string>
+    <string name="unused_app_duration">Periode aplikasi tak dipakai</string>
+    <string name="min_file_size">Ukuran minimum</string>
+    <string name="ai_classification">Perlindungan foto AI</string>
+    <string name="ai_classification_on">Aktif — mencegah foto buram orang dan hewan peliharaan masuk daftar penghapusan</string>
+    <string name="ai_classification_off">Nonaktif — pemindaian lebih cepat, tanpa perlindungan</string>
+    <string name="auto_scan">Pemindaian otomatis</string>
+    <string name="auto_scan_on">Aktif</string>
+    <string name="auto_scan_off">Nonaktif</string>
+    <string name="about_app">Aplikasi</string>
+    <string name="about_version">Versi</string>
+    <string name="about_developer">Pengembang</string>
+    <string name="about_tagline">Pengelolaan penyimpanan bertenaga AI</string>
+
+    <string name="pro_badge">PRO</string>
+    <string name="pro_upgrade_short">Pro</string>
+    <string name="pro_status_active">Pro aktif</string>
+    <string name="pro_status_free">Versi gratis</string>
+    <string name="pro_manage">Kelola langgananmu</string>
+    <string name="pro_upgrade_hint">Buka semua fitur dan hilangkan iklan</string>
+    <string name="pro_locked_title">Ini fitur Pro</string>
+    <string name="pro_locked_treemap">Peta penyimpanan menunjukkan persis folder mana yang memakan ruangmu. Buka dengan Pro.</string>
+    <string name="pro_unlock_button">Buka Pro</string>
+    <string name="pro_limit_title">Batas gratis tercapai</string>
+    <string name="pro_limit_message">Versi gratis menghapus hingga %1$d item sekaligus. Beralih ke Pro untuk membersihkan semuanya dalam sekali jalan.</string>
+
+    <string name="paywall_title">StorageManager Pro</string>
+    <string name="paywall_subtitle">Bersihkan semuanya sekaligus, tanpa iklan</string>
+    <string name="paywall_benefit_photo_ai">Pembersihan massal foto buram dan ganda</string>
+    <string name="paywall_benefit_auto_scan">Pemindaian otomatis di latar belakang</string>
+    <string name="paywall_benefit_large_files">Pencarian berkas besar tanpa batas</string>
+    <string name="paywall_benefit_treemap">Peta penyimpanan visual</string>
+    <string name="paywall_benefit_no_ads">Tanpa iklan</string>
+    <string name="paywall_plan_monthly">Bulanan</string>
+    <string name="paywall_plan_yearly">Tahunan</string>
+    <string name="paywall_plan_lifetime">Seumur hidup</string>
+    <string name="paywall_best_value">Paling hemat</string>
+    <string name="paywall_continue">Lanjutkan</string>
+    <string name="paywall_restore">Pulihkan pembelian</string>
+    <string name="paywall_watch_ad">Tonton iklan untuk 24 jam</string>
+    <string name="paywall_watch_ad_desc">Coba fitur Pro gratis selama sehari</string>
+    <string name="paywall_already_pro">Kamu sudah punya Pro. Terima kasih!</string>
+    <string name="paywall_price_unavailable">Harga tidak tersedia saat ini. Periksa koneksimu lalu coba lagi.</string>
+    <string name="paywall_purchase_success">Pro aktif. Selamat menikmati!</string>
+    <string name="paywall_purchase_pending">Pembelianmu menunggu persetujuan.</string>
+    <string name="paywall_purchase_cancelled">Pembelian dibatalkan.</string>
+    <string name="paywall_purchase_failed">Pembelian tidak dapat diselesaikan.</string>
+    <string name="paywall_reward_granted">Fitur Pro terbuka selama 24 jam.</string>
+    <string name="paywall_terms_note">Langganan diperpanjang otomatis dan bisa dibatalkan kapan saja lewat Google Play.</string>
+
+    <string name="ad_label">Iklan</string>
+
+    <string name="confirm_delete_title">Konfirmasi penghapusan</string>
+    <string name="confirm_delete_message">Hapus %1$d item terpilih? Tindakan ini tidak bisa dibatalkan.</string>
+    <string name="delete_success">%1$d item dihapus</string>
+    <string name="delete_selected">Hapus pilihan</string>
+    <string name="notification_channel_name">Pengingat pembersihan</string>
+    <string name="notification_channel_description">Peringatan tentang ruang menipis dan ruang yang bisa dibebaskan</string>
+    <string name="notification_cleanable_title">Ada ruang yang bisa dibebaskan</string>
+    <string name="notification_cleanable_message">Pemindaian terakhir menemukan lebih dari %1$d GB ruang yang bisa dibersihkan.</string>
+    <string name="apps_count">%1$d aplikasi</string>
+    <string name="files_summary_total">%1$d berkas • total %2$s</string>
+</resources>

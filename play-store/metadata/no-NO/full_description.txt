@@ -1,0 +1,12 @@
+Finn og fjern unødvendige filer med AI-drevet analyse
+
+✓ Finn uskarpe og doble bilder
+✓ Store filer — Over 50 MB
+✓ Apper — Ubrukte
+✓ App-hurtigbuffer — Tøm trygt
+✓ Doble dokumenter og nedlastinger
+✓ Tomme mapper, logg- og temp-filer
+✓ Lagringskart
+✓ Papirkurv
+
+Du blir bedt om tillatelse til å lese bildene og filene dine. Ingen data forlater enheten din.

@@ -1,0 +1,12 @@
+Encuentra y elimina archivos innecesarios con análisis basado en IA
+
+✓ Detecta fotos borrosas y duplicadas
+✓ Archivos grandes — Más de 50 MB
+✓ Apps — Sin usar
+✓ Cachés de apps — Limpia sin riesgo
+✓ Documentos duplicados y descargas
+✓ Carpetas vacías, registros y archivos temporales
+✓ Mapa de almacenamiento
+✓ Papelera
+
+Se te pedirá permiso para leer tus fotos y archivos. Ningún dato sale de tu dispositivo.

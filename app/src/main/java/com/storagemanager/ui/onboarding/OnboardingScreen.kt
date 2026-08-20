@@ -43,14 +43,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.storagemanager.ui.components.GradientButton
+import com.storagemanager.ui.permissions.PermissionUtils
 import com.storagemanager.ui.theme.*
 import kotlinx.coroutines.delay
+import androidx.compose.ui.res.stringResource
+import com.storagemanager.R
 
 @Composable
 fun OnboardingScreen(
-    onGetStarted: () -> Unit
+    onGetStarted: () -> Unit,
+    viewModel: OnboardingViewModel = androidx.hilt.navigation.compose.hiltViewModel()
 ) {
     var visible by remember { mutableStateOf(false) }
+    val context = androidx.compose.ui.platform.LocalContext.current
+
+    // İzinler artık uygulama açılışında değil, kullanıcı "Başlayalım" dediğinde isteniyor.
+    val permissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        viewModel.markCompleted(onGetStarted)
+    }
 
     LaunchedEffect(Unit) {
         delay(150)
@@ -121,7 +133,7 @@ fun OnboardingScreen(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "Telefonunu Temizle",
+                        text = stringResource(R.string.onboarding_title),
                         style = MaterialTheme.typography.displayLarge.copy(
                             fontWeight = FontWeight.Bold
                         ),
@@ -132,7 +144,7 @@ fun OnboardingScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "AI destekli akıllı analiz ile\ngereksiz dosyaları bul ve temizle",
+                        text = stringResource(R.string.onboarding_subtitle),
                         style = MaterialTheme.typography.bodyLarge,
                         color = OnSurface.copy(alpha = 0.7f),
                         textAlign = TextAlign.Center
@@ -154,30 +166,30 @@ fun OnboardingScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     FeatureRow(
                         icon = Icons.Outlined.PhotoLibrary,
-                        text = "Bulanık ve duplike fotoğrafları bul",
+                        text = stringResource(R.string.onboarding_feature_photos),
                         iconTint = PhotoColor
                     )
                     FeatureRow(
                         icon = Icons.Outlined.Widgets,
-                        text = "Kullanılmayan uygulamaları tespit et",
+                        text = stringResource(R.string.onboarding_feature_apps),
                         iconTint = AppColor
                     )
                     FeatureRow(
                         icon = Icons.Outlined.Cached,
-                        text = "Önbelleği güvenle temizle",
+                        text = stringResource(R.string.onboarding_feature_cache),
                         iconTint = CacheColor
                     )
                     FeatureRow(
                         icon = Icons.Outlined.FolderOpen,
-                        text = "Büyük dosyaları keşfet",
+                        text = stringResource(R.string.onboarding_feature_files),
                         iconTint = VideoColor
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(56.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
-            // ── CTA Button ──────────────────────────────────
+            // ── İzin bilgisi + CTA ──────────────────────────
             AnimatedVisibility(
                 visible = visible,
                 enter = fadeIn(animationSpec = tween(600, delayMillis = 700)) +
@@ -186,11 +198,39 @@ fun OnboardingScreen(
                             animationSpec = tween(600, delayMillis = 700)
                         )
             ) {
-                GradientButton(
-                    text = "Başlayalım",
-                    onClick = onGetStarted,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = stringResource(R.string.onboarding_privacy_note),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = OnSurface.copy(alpha = 0.55f),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    GradientButton(
+                        text = stringResource(R.string.get_started),
+                        onClick = {
+                            val missing = PermissionUtils.missingRuntimePermissions(context)
+                            if (missing.isEmpty()) {
+                                viewModel.markCompleted(onGetStarted)
+                            } else {
+                                permissionLauncher.launch(missing)
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Özel erişim izinleri isteğe bağlıdır — Ayarlar ekranından da verilebilir.
+                    Text(
+                        text = stringResource(R.string.onboarding_permissions_note),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = OnSurface.copy(alpha = 0.4f),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
     }

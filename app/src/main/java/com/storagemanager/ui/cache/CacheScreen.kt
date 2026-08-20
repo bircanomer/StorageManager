@@ -28,13 +28,16 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.CleaningServices
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.platform.testTag
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -43,7 +46,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,6 +62,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.storagemanager.domain.model.CacheInfo
+import androidx.compose.ui.res.stringResource
+import com.storagemanager.R
+import com.storagemanager.ui.components.formatFileSize
 
 // ── Renk Paleti ──────────────────────────────────────────────────────────────
 private val DarkBackground = Color(0xFF0D0D1A)
@@ -70,12 +76,6 @@ private val OnSurfaceColor = Color(0xFFC8C8D8)
 private val ErrorColor = Color(0xFFFF6B6B)
 private val SuccessColor = Color(0xFF4CAF50)
 
-private fun formatFileSize(bytes: Long): String {
-    if (bytes <= 0) return "0 B"
-    val units = arrayOf("B", "KB", "MB", "GB", "TB")
-    val digitGroups = (Math.log10(bytes.toDouble()) / Math.log10(1024.0)).toInt()
-    return String.format("%.1f %s", bytes / Math.pow(1024.0, digitGroups.toDouble()), units[digitGroups])
-}
 
 private fun openAppInfo(context: Context, packageName: String) {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -98,7 +98,7 @@ fun CacheScreen(
     navController: NavController,
     viewModel: CacheViewModel = hiltViewModel()
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     val maxCacheSize = state.cacheInfos.maxOfOrNull { it.cacheSize } ?: 1L
@@ -109,7 +109,7 @@ fun CacheScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Önbellek Yönetimi",
+                        stringResource(R.string.cache_title),
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
@@ -118,7 +118,7 @@ fun CacheScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Geri",
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White
                         )
                     }
@@ -138,15 +138,16 @@ fun CacheScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            Icons.Default.CleaningServices,
-                            contentDescription = null,
-                            modifier = Modifier.size(60.dp),
-                            tint = PrimaryColor.copy(alpha = 0.5f)
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .testTag("loading_spinner"),
+                            color = PrimaryColor,
+                            strokeWidth = 4.dp
                         )
                         Spacer(Modifier.height(16.dp))
                         Text(
-                            "Önbellek bilgileri yükleniyor...",
+                            stringResource(R.string.cache_loading),
                             color = OnSurfaceColor.copy(alpha = 0.6f),
                             fontSize = 14.sp
                         )
@@ -170,18 +171,31 @@ fun CacheScreen(
                         )
                         Spacer(Modifier.height(16.dp))
                         Text(
-                            "Önbellek temiz! 🎉",
+                            stringResource(R.string.cache_clean_state),
                             color = SuccessColor,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            "Temizlenecek önbellek bulunamadı",
+                            stringResource(R.string.cache_nothing_found),
                             color = OnSurfaceColor.copy(alpha = 0.5f),
                             fontSize = 14.sp,
                             textAlign = TextAlign.Center
                         )
+                        Spacer(Modifier.height(20.dp))
+                        Button(
+                            onClick = { viewModel.loadCache() },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = PrimaryColor,
+                                contentColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text(stringResource(R.string.rescan), fontWeight = FontWeight.SemiBold)
+                        }
                     }
                 }
             }
@@ -228,7 +242,7 @@ fun CacheScreen(
                                     )
                                     Spacer(Modifier.height(12.dp))
                                     Text(
-                                        "Toplam Önbellek",
+                                        stringResource(R.string.cache_total),
                                         color = OnSurfaceColor.copy(alpha = 0.7f),
                                         fontSize = 14.sp
                                     )
@@ -247,7 +261,7 @@ fun CacheScreen(
                                     )
                                     Spacer(Modifier.height(4.dp))
                                     Text(
-                                        "${state.cacheInfos.size} uygulama",
+                                        stringResource(R.string.apps_count, state.cacheInfos.size),
                                         color = OnSurfaceColor.copy(alpha = 0.5f),
                                         fontSize = 12.sp
                                     )
@@ -277,8 +291,7 @@ fun CacheScreen(
                                 )
                                 Spacer(Modifier.width(10.dp))
                                 Text(
-                                    "Önbellek, uygulamaların hızlı çalışması için geçici olarak sakladığı verilerdir. " +
-                                            "Temizlemek güvenlidir ve alan açmanıza yardımcı olur.",
+                                    stringResource(R.string.cache_explanation),
                                     color = OnSurfaceColor.copy(alpha = 0.8f),
                                     fontSize = 12.sp,
                                     lineHeight = 18.sp
@@ -316,7 +329,7 @@ fun CacheScreen(
                             Icon(Icons.Default.CleaningServices, contentDescription = null, modifier = Modifier.size(20.dp))
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                "Tüm Önbelleği Temizle",
+                                stringResource(R.string.cache_clear_all),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp
                             )
@@ -326,8 +339,7 @@ fun CacheScreen(
                     // ── Not ──────────────────────────────────────────────
                     item {
                         Text(
-                            "ℹ️ Android kısıtlamaları nedeniyle diğer uygulamaların önbelleğini doğrudan temizleyemiyoruz. " +
-                                    "Yukarıdaki buton sizi cihaz depolama ayarlarına yönlendirecektir.",
+                            stringResource(R.string.cache_android_note),
                             color = OnSurfaceColor.copy(alpha = 0.4f),
                             fontSize = 11.sp,
                             lineHeight = 16.sp,
@@ -435,7 +447,7 @@ private fun CacheListItem(
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.OpenInNew,
-                    contentDescription = "Uygulama bilgilerini aç",
+                    contentDescription = stringResource(R.string.cache_open_app_info),
                     tint = OnSurfaceColor.copy(alpha = 0.6f),
                     modifier = Modifier.size(18.dp)
                 )

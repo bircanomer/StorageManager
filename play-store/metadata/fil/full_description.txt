@@ -1,0 +1,12 @@
+Hanapin at alisin ang mga hindi kailangang file gamit ang pagsusuring pinapagana ng AI
+
+✓ Hanapin ang malabo at dobleng litrato
+✓ Malalaking file — Higit sa 50 MB
+✓ Mga app — Hindi nagagamit
+✓ Cache ng app — Linisin nang ligtas
+✓ Dobleng dokumento at download
+✓ Walang lamang folder, log at pansamantalang file
+✓ Mapa ng storage
+✓ Basurahan
+
+Hihingan ka ng pahintulot na basahin ang iyong mga litrato at file. Walang datos na lumalabas sa iyong device.

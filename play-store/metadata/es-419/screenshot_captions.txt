@@ -1,0 +1,4 @@
+Gestor de almacenamiento inteligente
+Detecta fotos borrosas y duplicadas
+Archivos y vídeos de más de 50 MB
+Mapa de almacenamiento

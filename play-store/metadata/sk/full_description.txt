@@ -1,0 +1,12 @@
+Nájdite a odstráňte nepotrebné súbory pomocou analýzy s AI
+
+✓ Nájdite rozmazané a duplicitné fotky
+✓ Veľké súbory — Nad 50 MB
+✓ Aplikácie — Nepoužívané
+✓ Vyrovnávacia pamäť aplikácií — Bezpečné vymazanie
+✓ Duplicitné dokumenty a stiahnuté súbory
+✓ Prázdne priečinky, logy a dočasné súbory
+✓ Mapa úložiska
+✓ Kôš
+
+Budete požiadaní o povolenie čítať vaše fotky a súbory. Žiadne údaje nikdy neopustia vaše zariadenie.

@@ -1,0 +1,12 @@
+Finde und entferne unnötige Dateien mit KI-gestützter Analyse
+
+✓ Unscharfe und doppelte Fotos finden
+✓ Große Dateien — Über 50 MB
+✓ Apps — Ungenutzt
+✓ App-Caches — Sicher leeren
+✓ Doppelte Dokumente und Downloads
+✓ Leere Ordner, Log- und Temp-Dateien
+✓ Speicherkarte
+✓ Papierkorb
+
+Du wirst um Zugriff auf deine Fotos und Dateien gebeten. Keine Daten verlassen dein Gerät.

@@ -1,58 +1,47 @@
 package com.storagemanager
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
+import com.storagemanager.ads.AdsManager
+import com.storagemanager.billing.BillingRepository
 import com.storagemanager.ui.navigation.NavGraph
 import com.storagemanager.ui.theme.StorageManagerTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+/**
+ * Tek Activity.
+ *
+ * İzinler burada istenmiyor: önceki sürüm `onCreate` içinde hem çalışma zamanı izin
+ * diyaloğunu açıyor hem de kullanıcıyı arka arkaya iki Ayarlar ekranına fırlatıyordu.
+ * Artık çalışma zamanı izinleri onboarding ekranında, özel erişim izinleri ise
+ * Ayarlar ekranında kullanıcı isteğiyle isteniyor.
+ */
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
-    private val permissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { results ->
-        // İzin sonuçları — şu an sessizce geç,
-        // dashboard zaten izinsiz çalışır, tarama sırasında tekrar istenir.
-    }
+    @Inject lateinit var billingRepository: BillingRepository
+    @Inject lateinit var adsManager: AdsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        requestStoragePermissions()
+        val screenshotMode = BuildConfig.DEBUG && intent.getBooleanExtra("screenshotMode", false)
+
+        // Play ile bağlantıyı kurup mevcut satın almayı doğrular; iptal edilen
+        // abonelikte Pro hakkı burada geri alınır.
+        if (!screenshotMode) billingRepository.start()
+
+        // AEA kullanıcıları için reklam onay formu — gerekmiyorsa hiçbir şey göstermez.
+        if (!screenshotMode) adsManager.requestConsentIfNeeded(this)
 
         setContent {
             StorageManagerTheme {
                 NavGraph()
             }
-        }
-    }
-
-    private fun requestStoragePermissions() {
-        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arrayOf(
-                Manifest.permission.READ_MEDIA_IMAGES,
-                Manifest.permission.READ_MEDIA_VIDEO,
-                Manifest.permission.READ_MEDIA_AUDIO
-            )
-        } else {
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-
-        val notGranted = permissions.filter {
-            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
-        }
-
-        if (notGranted.isNotEmpty()) {
-            permissionLauncher.launch(notGranted.toTypedArray())
         }
     }
 }

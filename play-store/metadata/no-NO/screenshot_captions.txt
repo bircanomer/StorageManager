@@ -1,0 +1,4 @@
+Smart lagringsbehandler
+Finn uskarpe og doble bilder
+Filer og videoer over 50 MB
+Lagringskart

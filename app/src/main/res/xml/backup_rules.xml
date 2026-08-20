@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android 11 ve öncesi için yedekleme kuralları (fullBackupContent).
+
+    Yalnızca kullanıcı tercihleri (DataStore) yedeklenir. <include> kullanıldığında
+    listelenmeyen her şey zaten hariç tutulur; böylece tarama önbelleği
+    (storage_manager_db) ve çöp kutusu dosyaları yedeğe gitmez.
+-->
+<full-backup-content>
+    <include domain="file" path="datastore" />
+</full-backup-content>

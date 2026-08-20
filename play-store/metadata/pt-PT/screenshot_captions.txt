@@ -1,0 +1,4 @@
+Gestor inteligente de armazenamento
+Encontre fotos desfocadas e duplicadas
+Ficheiros e vídeos acima de 50 MB
+Mapa de armazenamento

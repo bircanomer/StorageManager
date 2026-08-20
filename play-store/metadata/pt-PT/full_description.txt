@@ -1,0 +1,12 @@
+Encontre e remova ficheiros desnecessários com análise baseada em IA
+
+✓ Encontre fotos desfocadas e duplicadas
+✓ Ficheiros grandes — Acima de 50 MB
+✓ Aplicações — Não utilizadas
+✓ Cache das aplicações — Limpar em segurança
+✓ Documentos e transferências duplicados
+✓ Pastas vazias, ficheiros de registo e temporários
+✓ Mapa de armazenamento
+✓ Reciclagem
+
+Ser-lhe-á pedida permissão para ler as suas fotos e ficheiros. Nenhum dado sai do seu dispositivo.
